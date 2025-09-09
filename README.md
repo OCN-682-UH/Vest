@@ -15,9 +15,15 @@ Demonstrates my progress in learning R; This repository contains all of my scrip
 * Output/ - Results, plots, and processed data. 
 
 # **Folders** #
+<<<<<<< HEAD
 ### [Week_02](Week_02): Workflow and reproducible scripts ### 
 * [Data](Week_02/Data/weightdata.csv): weightdata.cvs (data on treatments and weight for each sample). 
 * [Scripts](Week_02/Scripts): first script with loaded libraries, read in data, and analysis. 
+=======
+* [Week_02](Week_02): Workflow and reproducible scripts. 
+** [Data](Week_02/Data/weightdata.csv): weightdata.cvs (data on treatments and weight for each sample). 
+** [Scripts](Week_02/Scripts): first script with loaded libraries, read in data, and analysis. 
+>>>>>>> b8ae46ad86cc7dbd236be83e3b041aff5942ea66
 
 # **Technologies** #
 * R: The primary programming language used throughout the course
