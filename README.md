@@ -21,51 +21,51 @@ Demonstrates my progress in learning R; This repository contains all of my scrip
 
 ### [Week_03](Week_03): Visuals
 * [Output](Week_03/Output): penguin figures, in class example and histogram homework
-*[Scripts](Week_03/Scripts): ggplot scripts to make plots that are nice to look at
+* [Scripts](Week_03/Scripts): ggplot scripts to make plots that are nice to look at
 
 ### [Week_04](): Data Wrangling
 * [Data]():
-*[Scripts](): 
+* [Scripts](): 
 
 ### [Week_05](): Relational data/dates and times
 * [Data]():
-*[Scripts](): 
+* [Scripts](): 
 
 ### [Week_06](): Quarto
 * [Data]():
-*[Scripts](): 
+* [Scripts](): 
 
 ### [Week_07](): Spatial Data and Maps
 * [Data]():
-*[Scripts](): 
+* [Scripts](): 
 
 ### [Week_08](): Strings and Regex
 * [Data]():
-*[Scripts](): 
+* [Scripts](): 
 
 ### [Week_09](): Factors
 * [Data]():
-*[Scripts](): 
+* [Scripts](): 
 
 ### [Week_10](): Functional Programming
 * [Data]():
-*[Scripts](): 
+* [Scripts](): 
 
 ### [Week_11](): Shiny Apps
 * [Data]():
-*[Scripts](): 
+* [Scripts](): 
 
 ### [Week_12](): TidyTuesday
 * [Data]():
-*[Scripts](): 
+* [Scripts](): 
 
 ### [Week_13](): Iteractive Data
 * [Data]():
-*[Scripts](): 
+* [Scripts](): 
 
 ### [Week_14](): Models
 * [Data]():
-*[Scripts](): 
+* [Scripts](): 
 
 # **Packages** #
 * tidyverse: A collection of R packages for data science
