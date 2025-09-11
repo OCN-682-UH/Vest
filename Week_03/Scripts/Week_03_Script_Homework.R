@@ -60,3 +60,6 @@ ggplot(data = penguins, #Start the ggplot, telling it what data set to use
   #make plot clean and easy to see with preset theme
   scale_fill_ghibli_d("SpiritedMedium", direction = -1) 
 #add some nice colors from library.ghibli
+
+ggsave(here("Week_03","Output","homework.pdf"),
+       width = 7, height = 5)
