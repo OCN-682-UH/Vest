@@ -1,0 +1,185 @@
+---
+title: "Week 4 Lecture Notes"
+author: "Jordan Vest"
+date: "2025-09-13"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+### Today we are going to plot penguin data ####
+### Created by: Jordan Vest ####################
+### Updated on: 2025_09_11 #####################
+
+
+
+###Load Libraries ######
+library(palmerpenguins)
+library(tidyverse)
+library(here)
+library(praise)
+library(ghibli)
+library(ggthemes)
+
+
+### Load data)
+
+glimpse(penguins)
+
+
+## data analysis section ###
+#### V1 ####
+ggplot(data = penguins, 
+       mapping = aes(x = bill_depth_mm,
+                     y = bill_length_mm,
+                     group = species, 
+                     color = species))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  labs(x = "Bill depth (mm)",
+       y = "Bill length (mm)"
+  )+
+  scale_color_viridis_d()+
+  scale_x_continuous(limits = c(12,20))+ #set x limits from 12 to 20
+  scale_y_continuous(limits = c(30, 50)) #set y limits from  30 to 50
+#Note anytime you are make a vector you need to put "c" for "concatenate"
+```
+
+```{r}
+#### V2 ####
+ggplot(data = penguins, 
+       mapping = aes(x = bill_depth_mm,
+                     y = bill_length_mm,
+                     group = species, 
+                     color = species))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  labs(x = "Bill depth (mm)",
+       y = "Bill length (mm)"
+  )+
+  scale_color_viridis_d()+
+  scale_x_continuous(breaks = c(14,17,21),
+                     labels = c("low", 'medium','high'))
+#Breaks, limits, and label let you visualize in more intuitive ways
+```
+
+```{r}
+#### V3 ####
+ggplot(data = penguins, 
+       mapping = aes(x = bill_depth_mm,
+                     y = bill_length_mm,
+                     group = species, 
+                     color = species))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  labs(x = "Bill depth (mm)",
+       y = "Bill length (mm)"
+  )+
+  scale_color_viridis_d()+
+  scale_color_manual(values = c("orange", "purple", "blue"))
+#Manual way to change colors. Preset colors by name already in R. Any HEX code can go here as well
+
+```
+
+```{r}
+#### V4 ####
+ggplot(data = penguins, 
+       mapping = aes(x = bill_depth_mm,
+                     y = bill_length_mm,
+                     group = species, 
+                     color = species))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  labs(x = "Bill depth (mm)",
+       y = "Bill length (mm)"
+  )+
+  scale_color_viridis_d()+
+  scale_colour_ghibli_d("YesterdayLight", direction = -1)
+##Color palettes can be imported by installing 'devtools' package and calling install_gitbub("username/packagename")
+#Each README will have instructions for how that color pallette needs to run 
+```
+
+```{r}
+#### V5 ####
+ggplot(data = penguins, 
+       mapping = aes(x = bill_depth_mm,
+                     y = bill_length_mm,
+                     group = species, 
+                     color = species))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  labs(x = "Bill depth (mm)",
+       y = "Bill length (mm)"
+  )+
+  scale_color_viridis_d()+
+  scale_colour_ghibli_d("YesterdayLight", direction = -1)+
+  coord_fixed(ratio= 0.5)+ #fix axes
+  theme_wsj() #ggthemes
+```
+
+```{r}
+#### V6 ####
+ggplot(data = penguins, 
+       mapping = aes(x = bill_depth_mm,
+                     y = bill_length_mm,
+                     group = species, 
+                     color = species))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  labs(x = "Bill depth (mm)",
+       y = "Bill length (mm)"
+  )+
+  scale_color_viridis_d()+
+  scale_colour_ghibli_d("YesterdayLight", direction = -1)+
+  coord_fixed(ratio= 0.5)+ #fix axes
+  theme_bw()+ #preset themes
+  theme(axis.title = element_text(size = 20,
+                                  color = "black"),
+        panel.background = element_rect(fill = "linen"))
+#layer in what you want to change, the element you want changed, what that change is
+
+```
+
+```{r}
+#### V7 ####
+ggplot(data = penguins, 
+       mapping = aes(x = bill_depth_mm,
+                     y = bill_length_mm,
+                     group = species, 
+                     color = species))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  labs(x = "Bill depth (mm)",
+       y = "Bill length (mm)"
+  )+
+  scale_color_viridis_d()+
+  scale_colour_ghibli_d("YesterdayLight", direction = -1)+
+  coord_fixed(ratio= 0.5)+ #fix axes
+  theme_bw()+ ###code breaks here?
+  theme(legend.text = element_text(size = 15))
+ggsave(here("Week_03","Scripts","Week_03_script_practice") 
+```
+
