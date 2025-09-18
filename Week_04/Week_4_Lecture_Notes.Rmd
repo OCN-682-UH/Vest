@@ -1,0 +1,243 @@
+---
+title: "Week_4_Lecture_Notes"
+author: "Jordan Vest"
+date: "2025-09-16"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#get your aes and mapping straight. 
+Where do I change the font size of my x and y labels?
+#Theme!
+  
+How do I save my plot?
+  ggsave
+
+#mutate makes your data longer (log of body mass)
+#summarize makes it shorter (ex. mean)
+If you have packages with same names you have to tell it what to call
+#dplyr::filter()
+#Logical Expressions
+x=y: naming
+x==y: exactly equal
+x!=y: is not equal to
+x%in%y: within
+is.na(x):is missing
+!is.na(x): is not missing
+x<y: less than
+x>y: greater than
+<=:less than or equal to
+
+#Boolean Operators
+a & b : AND
+a | b : OR
+!a : not
+```
+
+```{r}
+### Today we are going to plot penguin data ####
+### Created by: Dr. Nyssa Silbiger #############
+### Updated on: 2025-09-17 ####################
+#### Load Libraries ######
+library(palmerpenguins)
+library(tidyverse)
+library(here)
+### Load data ######
+# The data is part of the package and is called penguins
+glimpse(penguins)
+```
+
+```{r}
+filter(.data = penguins, 
+       sex == "female") #is sex exactly equal to "female"; returns back T/F
+```
+
+```{r}
+filter(.data = penguins, year == 2008, 
+       body_mass_g >= 5000 )
+#Penguins measured in the year 2008
+#Penguins that have a body mass greater than 5000
+#2008 and "2008" return the same because it's coded in as an integer but you also called something specific
+```
+
+```{r}
+#Boolean Operators
+a & b : AND
+a | b : OR
+!a : not
+
+#Penguins that were collected in either 2008 or 2009
+filter(.data = penguins, year == 2008 | year == 2009)
+filter(.data = penguins, year %in% c(2008,2009))
+
+#Penguins that are not from the island Dream
+filter(.data = penguins, island != "Dream")
+
+#Penguins in the species Adelie and Gentoo
+filter(.data = penguins, species == "Adelie", "Gentoo")
+filter(.data = penguins, species %in% c("Adelie","Gentoo")
+```
+
+```{r}
+Collapsing multiple tests into one
+#Wrong
+filter(.data = penguins,
+       3000 < body_mass_g <5000)
+#This is two questions, you need to call the question each time
+#Right
+filter(.data = penguins, 
+       body_mass_g <5000,
+       body_mass_g >3000
+Using multiple tests instead of %in%       
+# Wrong
+filter(.data = penguins,
+       island == "Dream",
+       island == "Biscoe")
+# Right
+filter(.data = penguins,
+       island %in% c("Dream","Biscoe"))      
+
+#Syntax
+verb(data, ...)
+```
+
+```{r}
+#Mutate
+data2<-mutate(.data = penguins, 
+       body_mass_kg = body_mass_g/1000)
+View(data2)
+data2<-mutate(.data = penguins, 
+       body_mass_kg = body_mass_g/1000, # convert mass to kg 
+       bill_length_depth = bill_length_mm/bill_depth_mm) # calculate the ratio of bill length to depth
+View(data2)
+
+#Mutating multiple columns at once based on some criteron (i.e. mutate all the numeric columns in one line)
+mutate_if(), mutate_at(), mutate_all()
+https://dplyr.tidyverse.org/reference/mutate_all.html
+
+
+```
+
+```{r}
+ifelse()
+#do conditional tests with mutate
+ifelse(TEST,
+       VALUE_IF_TRUE,
+       VALUE_IF_FALSE)
+
+data2<- mutate(.data = penguins,
+               after_2008 = ifelse(year>2008, "After 2008", "Before 2008"))
+View(data2)
+
+#Use mutate to create a new column to add flipper length and body mass together
+data3<-mutate(.data = penguins, 
+       length_body_mass = flipper_length_mm + body_mass_g)
+View(data3)
+#Use mutate and ifelse to create a new column where body mass greater than 4000 is labeled as big and everything else is small
+data4<-mutate(.data = penguins, 
+       body_mass_g >=4000 #incorrect
+data4<-mutate(penguins,
+              size= ifelse(body_mass_g > 4000, "big", "small"))
+#I'm making a column called size. If mass is bigger than 4000 call it big, less call it small
+View(data4)
+
+```
+
+```{r}
+#The Pipe
+%>% : and then
+Dataframe %>% #select the dataframe and then
+  verb1() %>% # do verb 1 and then
+  verb2() # do verb 2
+
+me %>%
+  wake_up(time = "6:00") %>%
+  music(turn = "on", to = "Beyonce") %>%
+  shower(wash_hair = TRUE) %>%
+  get_dressed(pants = TRUE, shirt = TRUE) %>%
+  leave_house(car = TRUE)
+
+|> : #R symbol for the native pipe
+penguin2<- penguins %>% # use penguin dataframe
+  filter(sex == "female") %>% #select females
+  mutate(log_mass = log(body_mass_g)) #calculate log biomass
+view(penguin2)
+```
+
+```{r}
+#Select - shrink by columns
+penguins %>% # use penguin dataframe
+  filter(sex == "female") %>% #select females
+  mutate(log_mass = log(body_mass_g)) %>% #calculate log biomass
+  select(species, island, sex, log_mass)
+
+#You can also use select() to rename columns.
+#Here, we are renaming species to have a capital S
+#Left is new, right is old
+penguins %>% # use penguin dataframe
+  filter(sex == "female") %>% #select females
+  mutate(log_mass = log(body_mass_g)) %>% #calculate log biomass
+  select(Species = species, island, sex, log_mass)
+```
+
+
+```{r}
+
+```
+
+```{r}
+#Summarize
+#Computer a table of summarized data
+#Calculate the mean flipper length (and exclude any NAs)
+penguins %>% # 
+  summarise(mean_flipper = mean(flipper_length_mm, na.rm=TRUE)) #remove the NAs
+#Calculate mean and mean flipper length
+penguins %>% # 
+  summarise(mean_flipper = mean(flipper_length_mm, na.rm=TRUE),
+            min_flipper = min(flipper_length_mm, na.rm=TRUE))
+```{r}
+#group_by
+#You can summarize values by certain groups.
+#group_by() by itself doesn't do anything, but it is powerful when put before summarize.
+#Let's calculate the mean and max bill length by island
+penguins %>%
+  group_by(island) %>%
+  summarise(mean_bill_length = mean(bill_length_mm, na.rm = TRUE),
+            max_bill_length = max(bill_length_mm, na.rm=TRUE))
+```
+
+
+```{r}
+penguins %>%
+  group_by(island, sex) %>%
+  summarise(mean_bill_length = mean(bill_length_mm, na.rm = TRUE),
+            max_bill_length = max(bill_length_mm, na.rm=TRUE))
+## summarise() has grouped output by 'island'. You can override using the
+## .groups argument.
+```
+
+
+```{r}
+drop_na()
+
+#drops rows with NAs from a specific column
+#drop ALL the rows that are missing data on sex
+
+penguins %>%
+  drop_na(sex)
+  group_by(island, sex) %>%
+  summarise(mean_bill_length = mean(bill_length_mm, na.rm = TRUE))
+## summarise() has grouped output by 'island'. You can override using the
+## .groups argument.
+  
+#Throw it into ggplot   
+  penguins %>%
+  drop_na(sex) %>%
+  ggplot(aes(x = sex, y = flipper_length_mm)) +
+  geom_boxplot()
+```
+
