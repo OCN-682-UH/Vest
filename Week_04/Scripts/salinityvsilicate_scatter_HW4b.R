@@ -11,17 +11,16 @@ glimpse(ChemData)
 
 #Clean data
 ChemData_clean <- ChemData %>%
-  drop_na() %>%   # remove all NAs
+  drop_na(-Temp_in) %>%   # remove all NAs in all columns EXCEPT (-) Temp_in
   separate(col = Tide_time,
            into = c("Tide", "Time"), # split tide/time into two columns
            sep = "_",
            remove = FALSE)
 glimpse(ChemData_clean)
 
-#Filter subset
-# here I’ll focus on Diffuse and Transition zones
+#Filter subset of Zone to remove "Ambient"
 ChemData_subset <- ChemData_clean %>%
-  filter(Zone != "Ambient")
+  filter(Zone != "Near Spring")
 glimpse(ChemData_subset)
 
 #Pivot longer
@@ -31,7 +30,7 @@ ChemData_long <- ChemData_subset %>%
                names_to = "Variable",
                values_to = "Value")
 glimpse(ChemData_long)
-# calculate mean and variance by zone, tide, and variable
+# calculate mean and variance by zone and chemical variables
 ChemData_long %>%
   group_by(Zone, Variable) %>%
   summarise(mean_val = mean(Value, na.rm = TRUE),
@@ -40,10 +39,6 @@ ChemData_long %>%
 glimpse(ChemData_long)
 
 #Plot: scatterplot of Silicate vs Salinity
-
-  facet_wrap(~Zone)
-print(plot)
-
 plot <- ChemData_subset %>%
   ggplot(aes(x = Silicate, y = Temp_in, color = Zone)) +
   geom_point(alpha = 0.7, size = 2) +
@@ -56,8 +51,8 @@ plot <- ChemData_subset %>%
   facet_wrap(~Zone) #see data by Zone
 print(plot)
        
-# ---- Save plot ----
-ggsave(here("outputs", "Salinity_pH_scatter.png"), p, width = 7, height = 5)
+#Save Plot
+ggsave(here("Week_04", "Outputs", "salinityvsilicate_scatter_HW4b.png"), p, width = 7, height = 5)
 
 
 
