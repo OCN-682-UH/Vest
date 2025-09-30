@@ -1,0 +1,102 @@
+---
+title: "Week_05a_Lecture Notes"
+author: "Jordan Vest"
+date: "2025-09-23"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+### Today we are going to practice joins with data from Becker and Silbiger (2020) ####
+### Updated on: 2025-09-23 ####################
+#### Load Libraries ######
+library(tidyverse)
+library(here)
+### Load data ######
+# Environmental data from each site
+EnviroData<-read_csv(here("Week_05","Data", "site.characteristics.data.csv"))
+#Thermal performance data
+TPCData<-read_csv(here("Week_05","Data","Topt_data.csv"))
+glimpse(EnviroData)
+glimpse(TPCData)
+# also use View()
+
+EnviroData_wide <- EnviroData %>% 
+  pivot_wider(names_from = parameter.measured, # pivot the data wider
+              values_from = values) %>%
+  arrange(site.letter) # arrange the dataframe by site (if it bothers you that site is not in order)
+View(EnviroData_wide)
+
+FullData_left<- left_join(TPCData, EnviroData_wide) %>%
+   relocate(where(is.numeric), .after = where(is.character)) # relocate all the numeric data after the character data
+
+FullData_left1 <- FullData_left %>%
+  pivot_longer(cols = c(E:substrate.cover),
+               names_to = "Variables",
+               values_to = "Values")  %>%
+  group_by(Variables, site.letter) %>%
+  summarise(Param_means = mean(Values, na.rm = TRUE), # get mean
+            Param_vars = var(Values, na.rm = TRUE)) # get variance
+```
+
+
+```{r setup, include=FALSE}
+### Today we are going to practice joins with data from Becker and Silbiger (2020) ####
+### Updated on: 2025-09-23 ####################
+#### Load Libraries ######
+library(tidyverse)
+library(here)
+### Load data ######
+# Environmental data from each site
+EnviroData<-read_csv(here("Week_05","Data", "site.characteristics.data.csv"))
+#Thermal performance data
+TPCData<-read_csv(here("Week_05","Data","Topt_data.csv"))
+glimpse(EnviroData)
+glimpse(TPCData)
+# also use View()
+
+EnviroData_wide <- EnviroData %>% 
+  pivot_wider(names_from = parameter.measured, # pivot the data wider
+              values_from = values) %>%
+  arrange(site.letter) # arrange the dataframe by site (if it bothers you that site is not in order)
+View(EnviroData_wide)
+
+FullData_left<- left_join(TPCData, EnviroData_wide) %>%
+   relocate(where(is.numeric), .after = where(is.character)) # relocate all the numeric data after the character data
+
+FullData_left1 <- FullData_left %>%
+  pivot_longer(cols = c(E:substrate.cover),
+               names_to = "Variables",
+               values_to = "Values")  %>%
+  group_by(Variables, site.letter) %>%
+  summarise(Param_means = mean(Values, na.rm = TRUE), # get mean
+            Param_vars = var(Values, na.rm = TRUE), # get variance
+            .group = 'drop'
+```
+summarise(across(columns of interest,
+list(mean = mean
+      variance = var )),
+      .groups = 'drop')
+
+```{r setup, include=FALSE}
+```
+right_join()
+inner_join()
+full_join()
+semi_join()
+anti_join()
+
+```{r setup, include=FALSE}
+# Make 1 tibble
+T1 <- tibble(Site.ID = c("A", "B", "C", "D"), 
+             Temperature = c(14.1, 16.7, 15.3, 12.8))
+
+T2 <- tibble(Site.ID = c("A", "B", "D", "E"),
+             pH = c(7.3,7.8,8.1,7.9))
+
+left_join(T1,T2)
+right_join(T1,T2)
+inner_join(T1,T2) #only keeps what they have all info for
+full_join(T1,T2) #keeps everything
+semi_join(T1,T2) #mix of inner and left, keeps all rows from first dataset where there are matching values in the second dara set, keeping just columns from the first dataset
+anti_join(T1,T2) #Saves all rows in the first data set that do not match anything in the second data set. This can help you find possible missing data across datasets
+
