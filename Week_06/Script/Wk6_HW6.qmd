@@ -1,0 +1,84 @@
+---
+title: "Wk6_HW6"
+author: "Jordan Vest"
+format: gfm
+prefer-html: true
+knitr:
+  opts_chunk:
+    fig.path: "../Output/"
+---
+
+# Introduction
+
+Today we are practicing with Quarto
+* Data import
+* Summary Table
+* Plot
+
+## Load the libraries
+
+```{r}
+#| message: false
+#| warning: false
+
+#Load libraries
+library(tidyverse)
+library(here)
+library(kableExtra)
+
+# Read in the data
+here::i_am("Week_06/Script/Wk6_HW6.qmd")
+chemicaldata <- read_csv(here("Week_06", "Data", "chemicaldata_maunalua copy.csv"))
+
+# Peek at the first few rows
+head(chemicaldata)
+```
+
+# Make a summary table
+```{r}
+#| warning: false
+#| message: false
+#| label: tbl-summary
+#| tbl-cap: "data summary table"
+
+summary_table <- chemicaldata %>%
+  group_by(Zone) %>%
+  summarise(
+    mean_temp = mean(Temp_in, na.rm = TRUE),
+    mean_sal = mean(Salinity, na.rm = TRUE),
+    n = n()
+  )
+
+summary_table %>%
+  kbl(caption = "Average Temperature and Salinity by Zone", digits = 2) %>%
+  kable_styling(full_width = FALSE, position = "center")
+  
+
+```
+@tbl-summary gives average _*Temperature*_ and _*Salinity*_ values for the _*Zones*_ with data
+
+# Make a plot
+```{r}
+#| warning: false
+#| fig-align: "center"
+#| fig-width: 6
+#| fig-height: 4
+#| dev: "png"
+#| label: fig-scatter
+#| fig-cap: "Temperature v Salinity plot"
+
+print(
+ggplot(chemicaldata, aes(x = Salinity, y = Temp_in, color = Zone)) +
+  geom_point(size = 3, alpha = 0.7) +
+  coord_cartesian(xlim = c(25, 35)) + 
+  theme_minimal(base_size = 12) +
+  labs(
+    title = "Temperature vs. Salinity by Zone",
+    x = "Salinity (psu)",
+    y = "Temperature (°C)",
+    color = "Zone"
+  ))
+
+```
+
+When you look @fig-scatter we can see there is a distribution of _*salinity*_ values in the *Diffuse* and *Transition* zones

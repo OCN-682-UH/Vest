@@ -1,0 +1,39 @@
+---
+title: "My Quarto part 2"
+author: "Jordan Vest"
+format: html
+knitr:
+  opts_chunk:
+    fig.path: "../Output/" ../ bc your qmd folder is in scripts and we want figs in outputs
+---
+
+# Introduction
+
+Today we are learning about how to work with figures
+
+## Load the libraries
+
+```{r}
+#| message: false
+#| warning: false
+
+#Load libraries
+library(tidyverse)
+library(here)
+library(palmerpenguins)
+```
+
+# Make a plot
+```{r}
+#| warning: false
+#| out-width: "70%"
+#| fig-align: "center"
+#| label: fig-penguin
+#| fig-cap: "This is a figure showing bill length by bill depth"
+
+penguins %>%
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = species))+
+  geom_point()
+```
+
+When you look @fig-penguin we can see there is a positive relationship between bill length and bill depth.

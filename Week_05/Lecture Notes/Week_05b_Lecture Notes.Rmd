@@ -73,9 +73,8 @@ library(here)
 library(lubridate)
 #Read in conductivity data
 CondData<-read_csv(here("Week_05","Data", "CondData.csv"))
-#convert date column to a datetime
+#convert date comlumn to a datetime
 CondData_datetime<-CondData %>%
-   mutate(date= mdy_hms(date))
-  
   
 ```
+

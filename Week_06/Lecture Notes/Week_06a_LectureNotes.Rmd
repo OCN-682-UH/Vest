@@ -1,0 +1,40 @@
+---
+title: "Week_06a_LectureNotes"
+output: html_document
+---
+
+#Get better grades by...
+Save your work then push
+Clear Environment
+Restart R environment to make sure you have the libraries loaded in script
+.rs.restartR()
+#remove whole list
+rm(list = ls())
+
+Watch that you don't rename plots and then try to save a plot that doesn't exist
+Use the source to run through and see if there is error in script
+Double check in github
+
+```{r}
+
+```
+
+Look into jupiter/quarto lab notebook
+#4parts to Quarto
+Metadata
+Text
+Code
+Output
+
+#Metadata
+---
+key:value
+title: "My awesome markdown file
+format:
+  html:
+  toc: true #tbl of contents
+  toc-depth: 4 #4 levels
+description: A great new article
+affiliation: RStudio
+date: "'rSys.Date()'"
+---
