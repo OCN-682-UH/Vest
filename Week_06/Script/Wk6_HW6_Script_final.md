@@ -1,13 +1,16 @@
 # Wk6_HW6
 Jordan Vest
 
-<script src="Wk6_HW6_files/libs/kePrint-0.0.1/kePrint.js"></script>
-<link href="Wk6_HW6_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<script src="Wk6_HW6_Script_final_files/libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="Wk6_HW6_Script_final_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 # Introduction
 
-Today we are practicing with Quarto \* Data import \* Summary Table \*
-Plot
+Today we are practicing with Quarto and completing the following tasks.
+
+- Data import
+- Summary Table
+- Plot
 
 ## Load the libraries
 
@@ -18,7 +21,7 @@ library(here)
 library(kableExtra)
 
 # Read in the data
-here::i_am("Week_06/Script/Wk6_HW6.qmd")
+here::i_am("Week_06/Script/Wk6_HW6_Script_final.qmd")
 chemicaldata <- read_csv(here("Week_06", "Data", "chemicaldata_maunalua copy.csv"))
 
 # Peek at the first few rows
@@ -76,7 +79,7 @@ Average Temperature and Salinity by Zone
 </div>
 
 <a href="#tbl-summary" class="quarto-xref">Table 1</a> gives average
-**Temperature** and **Salinity** values for the **Zones** with data
+**Temperature** and **Salinity** values for the **Zones** that have data
 
 # Make a plot
 
@@ -103,5 +106,5 @@ Figure 1: Temperature v Salinity plot
 </div>
 
 When you look <a href="#fig-scatter" class="quarto-xref">Figure 1</a> we
-can see there is a distribution of **salinity** values in the *Diffuse*
-and *Transition* zones
+can see there is a distribution of **Salinity** values in the *Diffuse*
+and *Transition* zones.

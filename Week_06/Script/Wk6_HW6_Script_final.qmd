@@ -10,10 +10,11 @@ knitr:
 
 # Introduction
 
-Today we are practicing with Quarto
-* Data import
-* Summary Table
-* Plot
+Today we are practicing with Quarto and completing the following tasks.
+
+- Data import 
+- Summary Table 
+- Plot 
 
 ## Load the libraries
 
@@ -27,7 +28,7 @@ library(here)
 library(kableExtra)
 
 # Read in the data
-here::i_am("Week_06/Script/Wk6_HW6.qmd")
+here::i_am("Week_06/Script/Wk6_HW6_Script_final.qmd")
 chemicaldata <- read_csv(here("Week_06", "Data", "chemicaldata_maunalua copy.csv"))
 
 # Peek at the first few rows
@@ -39,7 +40,7 @@ head(chemicaldata)
 #| warning: false
 #| message: false
 #| label: tbl-summary
-#| tbl-cap: "data summary table"
+#| tbl-cap: "Data Summary Table"
 
 summary_table <- chemicaldata %>%
   group_by(Zone) %>%
@@ -55,7 +56,7 @@ summary_table %>%
   
 
 ```
-@tbl-summary gives average _*Temperature*_ and _*Salinity*_ values for the _*Zones*_ with data
+@tbl-summary gives average _*Temperature*_ and _*Salinity*_ values for the _*Zones*_ that have data
 
 # Make a plot
 ```{r}
@@ -81,4 +82,4 @@ ggplot(chemicaldata, aes(x = Salinity, y = Temp_in, color = Zone)) +
 
 ```
 
-When you look @fig-scatter we can see there is a distribution of _*salinity*_ values in the *Diffuse* and *Transition* zones
+When you look @fig-scatter we can see there is a distribution of _*Salinity*_ values in the *Diffuse* and *Transition* zones.
