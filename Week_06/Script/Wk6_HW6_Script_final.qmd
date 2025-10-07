@@ -1,8 +1,7 @@
 ---
 title: "Wk6_HW6"
 author: "Jordan Vest"
-format: gfm
-prefer-html: true
+format: html
 knitr:
   opts_chunk:
     fig.path: "../Output/"
