@@ -1,0 +1,70 @@
+---
+title: "Wk7_LectureNotes"
+author: "Jordan Vest"
+format: html
+---
+check out Ruski HW6 for inspo
+
+# Intro to Maps
+Other very helpful packages:
+
+sf (This is for the serious GIS people. If you want to do actual spatial analyses this is the package to use)
+ggmap (Uses the google maps API to make maps. Really easy to use, but requires a credit card for the API...)
+tmap (static and interactive maps)
+leaflet (interactive html maps-- Awesome to use with rmakrdown files)
+Helpful references:
+
+The required reading for today
+[Advanced maps](https://r.geocompx.org/adv-map.html) 
+[Bathymetry example](https://ben-williams.github.io/updated_ggplot_figures.html#maps)
+[Earth Lab](https://www.earthdatascience.org/courses/earth-analytics/spatial-data-r/understand-epsg-wkt-and-other-crs-definition-file-types/)
+
+
+
+# Install packages
+```{r}
+install.packages(c("maps", "mapproj", "mapdata", "here","tidyverse"))
+```
+# Load Libraries
+```{r}
+# Load libraries
+library(tidyverse)
+library(here)
+library(maps)
+library(mapdata)
+library(mapproj)
+```
+# Read in Data
+```{r}
+# Read in data on population in California by county
+popdata<-read_csv(here("Week_07","data","CApopdata.csv"))
+#read in data on number of seastars at different field sites
+stars<-read_csv(here("Week_07","data","stars.csv"))
+```
+# {maps} package
+```{r}
+# get data for the entire world
+world<-map_data("world")
+head(world)
+```
+```{r}
+# get data for the USA
+usa<-map_data("usa")
+head(usa)
+```
+```{r}
+# get data for states
+states<-map_data("state")
+head(states)
+```
+
+```{r}
+# get data for counties
+counties<-map_data("county")
+head(counties)
+```
+
+```{r}
+
+```
+
