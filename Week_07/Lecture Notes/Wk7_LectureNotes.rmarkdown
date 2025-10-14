@@ -1,0 +1,429 @@
+---
+title: "Wk7_LectureNotes"
+author: "Jordan Vest"
+format: html
+---
+
+
+check out Ruski HW6 for inspo
+
+# Intro to Maps
+Other very helpful packages:
+
+sf (This is for the serious GIS people. If you want to do actual spatial analyses this is the package to use)
+ggmap (Uses the google maps API to make maps. Really easy to use, but requires a credit card for the API...)
+tmap (static and interactive maps)
+leaflet (interactive html maps-- Awesome to use with rmakrdown files)
+Helpful references:
+
+The required reading for today
+[Advanced maps](https://r.geocompx.org/adv-map.html) 
+[Bathymetry example](https://ben-williams.github.io/updated_ggplot_figures.html#maps)
+[Earth Lab](https://www.earthdatascience.org/courses/earth-analytics/spatial-data-r/understand-epsg-wkt-and-other-crs-definition-file-types/)
+
+# Load Libraries
+
+
+```{r}
+# Load libraries
+library(tidyverse)
+library(here)
+library(maps)
+library(mapdata)
+library(mapproj)
+```
+
+
+# Read in Data
+
+
+```{r}
+# Read in data on population in California by county
+popdata<-read_csv(here("Week_07","data","CApopdata.csv"))
+#read in data on number of seastars at different field sites
+stars<-read_csv(here("Week_07","data","stars.csv"))
+```
+
+
+# {maps} package
+
+
+```{r}
+# get data for the entire world
+world<-map_data("world")
+head(world)
+```
+
+```{r}
+# get data for the USA
+usa<-map_data("usa")
+head(usa)
+```
+
+```{r}
+# get data for states
+states<-map_data("state")
+head(states)
+```
+
+```{r}
+# get data for counties
+counties<-map_data("county")
+head(counties)
+```
+
+
+
+## Notes
+**long** is longitude. Things to the west of the prime meridian are negative.
+
+**lat** is latitude.
+
+**order** This just shows in which order ggplot should “connect the dots”
+
+**region** and **subregion** tell what region or subregion a set of points surrounds.
+
+**group** This is very important! ggplot2’s functions can take a group argument which controls (amongst other things) whether adjacent points should be connected by lines. If they are in the same group, then they get connected, but if they are in different groups then they don’t. Essentially, having to points in different groups means that ggplot “lifts the pen” when going between them.
+
+
+```{r}
+#make a map of the world
+ggplot()+
+  geom_polygon(data = world, aes(x = long, y = lat, group = group))
+```
+
+```{r}
+#juge her up
+ggplot()+
+  geom_polygon(data = world, 
+               aes(x = long, y = lat, group = group, fill = region),
+               color = "black")+
+  guides(fill = FALSE)+
+  theme_minimal()+
+  theme(panel.background = element_rect(fill = "lightblue"))
+
+```
+
+
+# Change the map projection
+See [here](https://rdrr.io/cran/mapproj/man/mapproject.html) for other map projections
+
+
+```{r}
+ggplot()+
+  geom_polygon(data = world, 
+               aes(x = long, 
+                   y = lat, 
+                   group = group,
+                   fill = region),
+               color = "black")+
+  theme_minimal()+
+  guides(fill = FALSE)+
+  theme(panel.background = element_rect(fill = "lightblue"))+
+  coord_map(projection = "mercator",
+            xlim = c(-180,180))
+```
+
+```{r}
+ggplot()+
+  geom_polygon(data = world, 
+               aes(x = long,
+                   y = lat,
+                   group = group, 
+                   fill = region),
+               color = "black")+
+  theme_minimal()+
+  guides(fill = FALSE)+
+  theme(panel.background = element_rect(fill = "lightblue"))+
+  coord_map(projection = "sinusoidal",
+            xlim = c(-180,180))
+```
+
+
+Try rnaturalearth package for some more advanced plotting with the sf package. Check it out [here](https://github.com/ropensci/rnaturalearth)
+Check reading for best way to get Hawai'i and Alaska in best proportion
+
+
+```{r}
+# Use the states dataset
+head(states)
+# Use the states dataset
+CA_data<-states %>%
+  filter(region == "california")
+```
+
+```{r}
+ggplot()+
+geom_polygon(data = CA_data, 
+             aes(x = long, 
+                 y = lat, 
+                 group = group), 
+             fill = "purple")+
+  coord_map()+
+  theme_minimal()
+```
+
+
+
+### plot the county data
+
+
+```{r}
+# Look at the county data
+head(counties)[1:3,] # only showing the first 3 rows for space
+# Look at the county data
+head(popdata)
+```
+
+
+### wrangle the data
+
+
+```{r}
+CApop_county<-popdata %>%
+  select("subregion" = County, Population)  %>% # rename the county col
+  inner_join(counties) %>%
+  filter(region == "california") # some counties have same names in other states
+## Joining with by = join_by(subregion)
+head(CApop_county)
+```
+
+
+### generate map
+
+
+```{r}
+ggplot()+
+geom_polygon(data = CApop_county, 
+             aes(x = long, 
+                 y = lat, 
+                 group = group,
+                 fill = Population),
+             color = "black")+
+  coord_map()+
+  theme_void()
+```
+
+
+### log scale for easier use
+
+
+```{r}
+ggplot()+
+geom_polygon(data = CApop_county, 
+             aes(x = long, 
+                 y = lat, 
+                 group = group,
+                 fill = Population),  
+             color = "black")+
+  coord_map()+
+  theme_void() +
+  scale_fill_gradient(trans = "log10")
+```
+
+
+### Add a layer of points
+
+
+```{r}
+head(stars)
+ggplot()+
+geom_polygon(data = CApop_county, 
+             aes(x = long, 
+                 y = lat, 
+                 group = group,
+                 fill = Population),  
+             color = "black")+
+  geom_point(data = stars, # add a point at all my sites
+             aes(x = long,
+                 y = lat))+
+  coord_map()+
+  theme_void() +
+  scale_fill_gradient(trans = "log10")
+```
+
+
+#Make points proportional to number of stars
+
+
+```{r}
+ggplot()+
+geom_polygon(data = CApop_county, 
+             aes(x = long, 
+                 y = lat, 
+                 group = group,
+                 fill = Population),  
+             color = "black")+
+  geom_point(data = stars, # add a point at all my sites 
+             aes(x = long, 
+                 y = lat,
+                 size = star_no))+
+  coord_map()+
+  theme_void() +
+  scale_fill_gradient(trans = "log10")
+```
+
+
+### Make a better legend label
+
+
+```{r}
+ggplot()+
+geom_polygon(data = CApop_county, 
+             aes(x = long, 
+                 y = lat, 
+                 group = group,
+                 fill = Population),  
+             color = "black")+
+  geom_point(data = stars, # add a point at all my sites 
+             aes(x = long, 
+                 y = lat,
+                 size = star_no))+ 
+  coord_map()+
+  theme_void() +
+  scale_fill_gradient(trans = "log10")+
+  labs(size = "# stars/m2")
+```
+
+
+### Save it
+
+
+```{r}
+ggplot()+
+geom_polygon(data = CApop_county, 
+             aes(x = long, 
+                 y = lat, 
+                 group = group,
+                 fill = Population),  
+             color = "black")+
+  geom_point(data = stars, # add a point at all my sites 
+             aes(x = long, 
+                 y = lat,
+                 size = star_no))+ 
+  coord_map()+
+  theme_void() +
+  scale_fill_gradient(trans = "log10")+
+  labs(size = "# stars/m2") 
+  ggsave(here("Week_07","Output","CApop.pdf"))
+```
+
+
+
+# Lecture 7b
+[ggmap](http://stat405.had.co.nz/ggmap.pdf)
+[Map plots in R](https://www.littlemissdata.com/blog/maps)
+[A guide to ggmap](https://builtin.com/data-science/ggmap)
+
+
+
+```{r}
+library(ggmap)
+library(tidyverse)
+library(here)
+library(ggspatial)
+```
+
+
+register_google(key = "YOUR KEY HERE", write = TRUE) ### use your own API
+#IMPORTANT don't put your key to github!! I usually save mine in a text file and import it each time
+# Setting write = TRUE will write the API key to your R environment so that you do not have to re register it each time
+register_stadiamaps("Your API KEY HERE", write = TRUE)
+///Replacing old key (9c370d22) with new key in /Users/jordanvest/.Renviron
+
+
+```{r}
+ChemData<-read_csv(here("Week_07","data","chemicaldata_maunalua.csv"))
+glimpse(ChemData)
+```
+
+
+
+get_map() is the function to get a basemap from Google Maps. At it's simplest form, you only need to put in a location. It just get's it, doesn't give you the map
+
+
+```{r}
+Oahu<-get_map("Oahu")
+```
+
+
+////Warning: Geocoding "Oahu" failed with error:
+This API project is not authorized to use this API.
+
+Use ggmap to plot the base layer. Essentially a screenshot of google maps
+
+
+```{r}
+ggmap(Oahu)
+```
+
+
+
+You can also put in lat and lon coordinates to get a basemap.
+Get coordinates for Wailupe on Oahu.
+
+
+```{r}
+#Make a data frame of lon and lat coordinates
+WP<-data.frame(lon = -157.7621, lat = 21.27427) # coordinates for Wailupe
+# Get base layer
+Map1<-get_map(WP)
+# plot it
+ggmap(Map1)
+```
+
+
+The zoom argument, an integer from 3 to 20 specifying how large the spatial extent should be around the center, with 3 being the continent level and 20 being roughly the single building level.
+
+
+```{r}
+Map1<-get_map(WP,zoom = 17)
+ggmap(Map1)
+```
+
+
+Change map type
+
+
+```{r}
+Map1<-get_map(WP,zoom = 17, maptype = "satellite")
+ggmap(Map1)
+```
+
+
+You can use the ggmap base layer in any ggplot
+
+
+```{r}
+Map1<-get_map(WP,zoom = 17, maptype = "satellite") 
+ggmap(Map1)+
+  geom_point(data = ChemData,
+             aes(x = Long, y = Lat, color = Salinity),
+             size = 4) +
+  scale_color_viridis_c()
+```
+
+
+Add a scale bar
+
+
+```{r}
+ggmap(Map1)+
+  geom_point(data = ChemData, 
+             aes(x = Long, y = Lat, color = Salinity), 
+             size = 4) + 
+  scale_color_viridis_c()+
+  annotation_scale( bar_cols = c("yellow", "white"),
+                    location = "bl")+ # put the bar on the bottom left and make the colors yellow and white
+  annotation_north_arrow(location = "tl")+ # add a north arrow
+  coord_sf(crs = 4326) # for the scale bar to work it needs to be in this coordinate system - this is a typical coordinate reference system for a GPS (WGS84)
+```
+
+
+Use geocode() to get exact locations that you can then use in the maps.
+
+
+```{r}
+geocode("the white house")
+```
+

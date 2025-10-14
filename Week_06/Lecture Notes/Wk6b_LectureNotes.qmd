@@ -11,6 +11,14 @@ knitr:
 
 Today we are learning about how to work with figures
 
+Useful links
+[Outputs](https://quarto.org/docs/output-formats/all-formats.html)
+[HTML Theming](https://quarto.org/docs/output-formats/html-themes.html)
+[Quarto Cheatsheet](https://rstudio.github.io/cheatsheets/html/quarto.html)
+[Table](https://rfortherestofus.com/2019/11/how-to-make-beautiful-tables-in-r/)
+
+
+
 ## Load the libraries
 
 ```{r}
