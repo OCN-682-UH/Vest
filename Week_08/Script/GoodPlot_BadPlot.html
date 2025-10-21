@@ -97,10 +97,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#display-animation" id="toc-display-animation" class="nav-link" data-scroll-target="#display-animation">Display animation</a></li>
   <li><a href="#why-this-plot-is-bad" id="toc-why-this-plot-is-bad" class="nav-link" data-scroll-target="#why-this-plot-is-bad">Why This Plot Is Bad</a></li>
   </ul></li>
-  <li><a href="#the-good-plot" id="toc-the-good-plot" class="nav-link" data-scroll-target="#the-good-plot">The Good Plot</a>
+  <li><a href="#good-plot" id="toc-good-plot" class="nav-link" data-scroll-target="#good-plot">Good Plot</a>
   <ul class="collapse">
   <li><a href="#data-prep-1" id="toc-data-prep-1" class="nav-link" data-scroll-target="#data-prep-1">Data prep</a></li>
-  <li><a href="#good-plot" id="toc-good-plot" class="nav-link" data-scroll-target="#good-plot">Good Plot</a></li>
+  <li><a href="#the-good-plot" id="toc-the-good-plot" class="nav-link" data-scroll-target="#the-good-plot">The Good Plot</a></li>
   <li><a href="#why-this-plot-is-so-good" id="toc-why-this-plot-is-so-good" class="nav-link" data-scroll-target="#why-this-plot-is-so-good">Why this plot is <em>so</em> good</a></li>
   </ul></li>
   </ul>
@@ -223,8 +223,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transition_time</span>(Year) <span class="sc">+</span></span>
 <span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">caption =</span> <span class="st">"Year: {frame_time}"</span>) <span class="sc">+</span></span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ease_aes</span>(<span class="st">'linear'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ease_aes</span>(<span class="st">'linear'</span>)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>badplot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="GoodPlot_BadPlot_files/figure-html/unnamed-chunk-4-1.gif" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="GoodPlot_BadPlot_files/figure-html/unnamed-chunk-4-1.gif" class="img-fluid figure-img"></a></p>
+</figure>
+</div>
+</div>
 </div>
 <section id="save-plot-to-the-right-place" class="level4">
 <h4 class="anchored" data-anchor-id="save-plot-to-the-right-place">Save plot to the right place</h4>
@@ -241,7 +249,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Click me for code!</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Commenting out for rendering purposes</span></span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Commenting out because it won't render in quarto :'(</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#bad_anim &lt;- animate(</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a> <span class="co"># badplot,</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">#nframes = 100,</span></span>
@@ -266,15 +274,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Click me for code!</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="fu">here</span>(<span class="st">"Week_08"</span>, <span class="st">"Output"</span>, <span class="st">"bad_anim.gif"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># knitr::include_graphics(here("Week_08", "Output", "bad_anim.gif"))</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><a href="../Output/bad_anim.gif" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="../Output/bad_anim.gif" class="img-fluid figure-img"></a></p>
-</figure>
-</div>
-</div>
 </div>
 </section>
 <section id="why-this-plot-is-bad" class="level3">
@@ -288,17 +289,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><strong>Misleading visuals</strong></p>
 <ul>
 <li>Point size exaggerates some launches and hides smaller ones.</li>
-<li>Color mapped to Year looks cool but clashes with the background, so it’s almost impossible to tell years apart.</li>
-</ul></li>
-<li><p><strong>Ugly and distracting</strong></p>
-<ul>
 <li>Pink background + orange land + purple borders = headache.</li>
 <li>Map projection distorts places, making it harder to interpret.</li>
 </ul></li>
 <li><p><strong>Bad labels and legends</strong></p>
 <ul>
-<li>Axes are “Longitude (kinda)” and “Latitude (ish)”—very helpful, not.</li>
-<li>Title/subtitle colors fight with each other, stealing attention from the data.</li>
+<li>Axes are “Longitude (kinda)” and “Latitude (ish)”—very helpful (not)</li>
+<li>Title/subtitle colors fight with each other</li>
 <li>Legend is messy, hard to read, and doesn’t really tell you anything.</li>
 </ul></li>
 <li><p><strong>Animation doesn’t help</strong></p>
@@ -313,8 +310,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 </section>
 </section>
-<section id="the-good-plot" class="level1">
-<h1>The Good Plot</h1>
+<section id="good-plot" class="level1">
+<h1>Good Plot</h1>
 <section id="data-prep-1" class="level3">
 <h3 class="anchored" data-anchor-id="data-prep-1">Data prep</h3>
 <div class="cell">
@@ -345,8 +342,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>top_data<span class="sc">$</span>Entity <span class="ot">&lt;-</span> <span class="fu">factor</span>(top_data<span class="sc">$</span>Entity, <span class="at">levels =</span> entity_order)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<section id="save-data-to-folder" class="level4">
-<h4 class="anchored" data-anchor-id="save-data-to-folder">Save Data to Folder</h4>
+<section id="save-data-to-folder" class="level5">
+<h5 class="anchored" data-anchor-id="save-data-to-folder">Save Data to Folder</h5>
 <div class="cell">
 <details class="code-fold">
 <summary>Click me for code!</summary>
@@ -357,8 +354,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </section>
-<section id="good-plot" class="level3">
-<h3 class="anchored" data-anchor-id="good-plot">Good Plot</h3>
+<section id="the-good-plot" class="level3">
+<h3 class="anchored" data-anchor-id="the-good-plot">The Good Plot</h3>
 <div class="cell">
 <details class="code-fold">
 <summary>Click me for code!</summary>
@@ -392,8 +389,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>         <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">11</span>),</span>
 <span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>         <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
 <span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>         <span class="at">panel.grid.major.x =</span> <span class="fu">element_blank</span>()</span>
-<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>     )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>     )</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>  goodplot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="GoodPlot_BadPlot_files/figure-html/unnamed-chunk-11-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="GoodPlot_BadPlot_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
 </div>
 <section id="save-plot-to-the-right-place-2" class="level4">
 <h4 class="anchored" data-anchor-id="save-plot-to-the-right-place-2">Save plot to the right place</h4>
