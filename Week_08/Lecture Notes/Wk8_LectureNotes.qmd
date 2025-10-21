@@ -1,0 +1,457 @@
+---
+title: "Wk8_LectureNotes"
+format: html
+---
+
+## Maps
+Make sure your APIs work
+Refresh of goodplot/badplot readings
+
+
+## Working with words
+Using {stringr} to clean up strings (part of tidyverse)
+Intro to regex (regular expressions)
+Using {tidytext} for text mining/analysis
+Make a wordcloud
+
+[Cheatsheet](https://rstudio.github.io/cheatsheets/regex.pdf)
+
+#### Install Packages
+library(here)
+library(tidyverse)
+library(tidytext)
+library(wordcloud2)
+library(janeaustenr)
+
+### {stringr}
+There are 4 basic families of functions in the {stringr} package:
+
+* *Manipulation*: these functions allow you to manipulate individual characters within the strings in character vectors.
+
+* *Whitespace tools* to add, remove, and manipulate whitespace.
+
+* *Locale sensitive operations* whose operations will vary from locale to locale.
+
+* *Pattern matching functions* These recognize four engines of pattern description. The most common is regular expressions, but there are three other tools.
+
+## Manipulation
+Paste words together. This can be useful if say you have a two columns of treatments and you want to combine them into one (e.g., high temp, low temp and high pH, low pH).
+```{r}
+paste("High temp", "Low pH")
+## [1] "High temp Low pH"
+
+#Add a dash in between the words
+paste("High temp", "Low pH", sep = "-")
+## [1] "High temp-Low pH"
+
+#Remove the space in between the words
+paste0("High temp", "Low pH")
+## [1] "High tempLow pH"
+```
+### Working with vectors
+```{r}
+shapes <- c("Square", "Circle", "Triangle")
+paste("My favorite shape is a", shapes)
+## [1] "My favorite shape is a Square"   "My favorite shape is a Circle"  
+## [3] "My favorite shape is a Triangle"
+#Use case: My site is "...", My site is "..."
+
+two_cities <- c("best", "worst")
+paste("It was the", two_cities, "of times.")
+## [1] "It was the best of times."  "It was the worst of times."
+#This is very useful when making labels for your plots
+```
+### Manipulating individual characters
+```{r}
+#Let's say you want to know how long a string is:
+
+shapes # vector of shapes
+## [1] "Square"   "Circle"   "Triangle"
+str_length(shapes) # how many letters are in each word?
+## [1] 6 6 8
+
+#Let's say you want to extract specific characters. Do you work with sequence data? This could be super useful to exact specific bases in a sequence.
+
+seq_data<-c("ATCCCGTC")
+str_sub(seq_data, start = 2, end = 4) # extract the 2nd to 4th AA
+## [1] "TCC"
+```
+#### You can also modify strings
+```{r}
+str_sub(seq_data, start = 3, end = 3) <- "A" # add an A in the 3rd position
+seq_data
+## [1] "ATACCGTC"
+#You can also duplicate patterns in your strings. Here I am duplicating it 2 and 3 times
+
+str_dup(seq_data, times = c(2, 3)) # times is the number of times to duplicate each string
+## [1] "ATACCGTCATACCGTC"         "ATACCGTCATACCGTCATACCGTC"
+```
+
+# Whitespace
+_*GREAT*_ way to solve your 2AM errors
+Say you have a column and you did not copy and paste your treatments like you learned in the first week of class. You now have some words with extra white spaces and R thinks its an entirely new word. Here is how to deal with that...
+```{r}
+badtreatments<-c("High", " High", "High ", "Low", "Low")
+badtreatments
+```
+[1] "High"  " High" "High " "Low"   "Low"
+
+Remove white space
+```{r}
+str_trim(badtreatments) # this removes both
+```
+[1] "High" "High" "High" "Low"  "Low"
+
+You can also just remove from one side or the other
+
+```{r}
+str_trim(badtreatments, side = "left") # this removes left
+```
+ [1] "High"  "High"  "High " "Low"   "Low"
+The opposite of str_trim is str_pad, to add white space to either side
+```{r}
+str_pad(badtreatments, 5, side = "right") # add a white space to the right side after the 5th character
+```
+[1] "High " " High" "High " "Low  " "Low  "
+
+Add a character instead of a white space
+```{r}
+str_pad(badtreatments, 5, side = "right", pad = "1") # add a 1 to the right side after the 5th character
+```
+[1] "High1" " High" "High " "Low11" "Low11"
+
+## Local Sensitive
+Important, these will perform differently in different places in the world/with different languages. The default is English, but you can set the language setting.
+
+Make everything upper case
+```{r}
+x<-"I love R!"
+str_to_upper(x)
+```
+[1] "I LOVE R!"
+
+Make it lowercase
+```{r}
+str_to_lower(x)
+```
+[1] "i love r!"
+
+Make it a title case (cap every word)
+```{r}
+str_to_title(x)
+```
+[1] "I Love R!"
+
+## Pattern Matching
+{stringr} has functions to view, detect, locate, extract, match, replace, and split strings based on specific patterns.
+
+View a specific pattern in a vector of strings. Find all the strings with an A
+```{r}
+data<-c("AAA", "TATA", "CTAG", "GCTT")
+str_view(data, pattern = "A")
+```
+{stringr} has functions to view, detect, locate, extract, match, replace, and split strings based on specific patterns.
+
+Detect a specific pattern
+```{r}
+str_detect(data, pattern = "A")
+```
+[1]  TRUE  TRUE  TRUE FALSE
+```{r}
+str_detect(data, pattern = "AT")
+```
+[1] FALSE  TRUE FALSE FALSE
+
+Locate a Pattern
+```{r}
+str_locate(data, pattern = "AT")
+```
+ start end
+[1,]    NA  NA
+[2,]     2   3
+[3,]    NA  NA
+[4,]    NA  NA
+
+# Metacharacters
+Let's say that you have the following set of strings...
+```{r}
+vals<-c("a.b", "b.c","c.d")
+```
+And you want to replace all the "." with a space. Here is how you would do it:
+```{r}
+#string, pattern, replace
+str_replace(vals, "\\.", " ")
+```
+[1] "a b" "b c" "c d"
+
+### Function headaches
+Each function in {stringr} has two forms a basic form that searches for the first instance of a character and a *_all that searches for all instances. For example:
+
+Let's say we had multiple "." in our character vector
+```{r}
+vals<-c("a.b.c", "b.c.d","c.d.e")
+```
+string, pattern, replace
+```{r}
+str_replace(vals, "\\.", " ")
+```
+[1] "a b.c" "b c.d" "c d.e"
+str_replace only replaces the first instance. Let's try 
+```{r}
+str_replace_all()
+```
+string, pattern, replace
+```{r}
+str_replace_all(vals, "\\.", " ")
+```
+[1] "a b c" "b c d" "c d e"
+
+Let's subset the vector to only keep strings with digits
+```{r}
+val2<-c("test 123", "test 456", "test")
+str_subset(val2, "\\d")
+```
+[1] "test 123" "test 456"
+
+### Character Class
+A character class or character set is a list of characters enclosed by square brackets [ ]. Character sets are used to match only one of the different characters. For example, the regex character class [aA] matches any lower case letter a or any upper case letter A.
+Use case when you are searching for Site A or 5,6,7
+
+### Quantifiers
+symbol	Meaning 
+^	      Beginning of String
+$	      End of String
+\n    	Newline
++	      One or More of Previous
+*	      Zero or More of Previous
+?	      Zero or One of Previous
+{5}   	Exactly 5 of Previous
+{2, 5}	Between 2 and 5 or Previous
+{2, }	  More than 2 of Previous
+
+# tidytext
+Useful for word clouds and metaanalysis
+```{r}
+original_books <- austen_books() %>% # get all of Jane Austen's books
+  group_by(book) %>%
+  mutate(line = row_number(), # find every line
+         chapter = cumsum(str_detect(text, regex("^chapter [\\divxlc]", # count the chapters (starts with the word chapter followed by a digit or roman numeral)
+                                                 ignore_case = TRUE)))) %>% #ignore lower or uppercase
+  ungroup() # ungroup it so we have a dataframe again
+# don't try to view the entire thing... its >73000 lines...
+head(original_books)
+```
+Because we are interest in text mining, we will want to clean this so that there is only one word per row so its tidy. In tidytext each word is refered to as a token. The function to unnest the data so that its only one word per row is unnest_tokens().
+```{r}
+tidy_books <- original_books %>%
+  unnest_tokens(output = word, input = text) # add a column named word, with the input as the text column
+head(tidy_books) # there are now >725,000 rows. Don't view the entire thing!
+```
+OK so we now have >735,000 rows of words.... but, some of these words are kind of useless. Words that are common and don't really have important meaning (e.g. "and","by","therefore"...). These are called stopwords. We can use the function "get_stopwords()" to essentially remove these words from our dataframe. (This function is essentially just a dataframe of unnecessary words). You can also formulate your own stopwords
+```{r}
+#see an example of all the stopwords
+head(get_stopwords())
+```
+Use what we know from joins to remove all the stopwords
+```{r}
+cleaned_books <- tidy_books %>%
+  anti_join(get_stopwords()) # dataframe without the stopwords
+```
+Joining with by = join_by(word)
+```{r}
+head(cleaned_books)
+```
+## Wordclouds!
+```{r}
+words<-cleaned_books %>%
+  count(word) %>% # count all the words
+  arrange(desc(n))%>% # sort the words
+  slice(1:100) #take the top 100
+wordcloud2(words, shape = 'triangle', size=0.3) # make a wordcloud out of the top 100 words
+
+```
+
+#AWESOME R Package (for friends of R)
+{ggirl} (gg in real life)
+Have you ever made a plot that you love so much and thought, "I want to send this to someone!" Well, now you can! Turn your ggplots into a postcard.
+(Note, I wouldn't be mad if random postcards of ggplot showed up in my mailbox...)
+
+Check out ggirl [here](https://jnolis.com/blog/introducing_ggirl/)
+
+# Advanced Plotting 
+## Lecture 8b
+
+```{r}
+library(tidyverse)
+library(here)
+library(patchwork) #bring plots together
+library(ggrepel) #repel your labels on your plots
+library(gganimate) #add some animations to plots
+library(magick) #photo processing
+library(palmerpenguins)
+```
+
+### Patchwork - bring plots together
+More info [here](https://patchwork.data-imaginist.com/articles/patchwork.html)
+```{r}
+# plot 1
+p1<-penguins %>%
+  ggplot(aes(x = body_mass_g, 
+             y = bill_length_mm, 
+             color = species))+
+  geom_point()
+p1
+```
+
+```{r}
+# plot 2
+p2<-penguins %>%
+  ggplot(aes(x = sex, 
+             y = body_mass_g, 
+             color = species))+
+  geom_jitter(width = 0.2)
+p2
+```
+
+```{r}
+p1+p2
+```
+#### Add labels
+```{r}
+p1+p2 +
+  plot_layout(guides = 'collect')+
+  plot_annotation(tag_levels = 'A')
+```
+####Put one plot on top of other
+```{r}
+p1/p2 +
+  plot_layout(guides = 'collect')+
+  plot_annotation(tag_levels = 'A')
+```
+
+### ggrepel - easy and clear labels for plots
+More infor [here](https://ggrepel.slowkow.com/articles/examples.html)
+```{r}
+View(mtcars)
+```
+
+```{r}
+ggplot(mtcars, aes(x = wt, 
+                   y = mpg, 
+                   label = rownames(mtcars))) +
+  geom_text() + # creates a text label
+  geom_point(color = 'red')
+```
+Make the point labels clearer
+```{r}
+ggplot(mtcars, aes(x = wt, 
+                   y = mpg, 
+                   label = rownames(mtcars))) +
+  geom_text_repel() + # repel them
+  geom_point(color = 'red')
+```
+Adds box around point
+```{r}
+
+ggplot(mtcars, aes(x = wt, 
+                   y = mpg, 
+                   label = rownames(mtcars))) +
+  geom_label_repel() + # repel them
+  geom_point(color = 'red')
+```
+
+### gganimate - make fig an animation
+Make and image [here](https://gganimate.com/index.html)
+```{r}
+penguins %>%
+ggplot(aes(x = body_mass_g, 
+            y = bill_depth_mm, 
+            color = species)) +
+  geom_point()
+```
+Add a transition
+```{r}
+penguins %>%
+ggplot(aes(x = body_mass_g, 
+            y = bill_depth_mm, 
+            color = species)) +
+  geom_point() +
+  transition_states(
+     year, # what are we animating by
+     transition_length = 2, #The relative length of the transition.
+     state_length = 1 # The length of the pause between transitions
+   )
+```
+Change the ease aesthetics in transition
+```{r}
+penguins %>%
+ggplot(aes(x = body_mass_g, 
+            y = bill_depth_mm, 
+            color = species)) +
+  geom_point() +
+  transition_states(
+     year, # what are we animating by
+     transition_length = 2, #The relative length of the transition.
+     state_length = 1 # The length of the pause between transitions
+   )+
+  ease_aes("bounce-in-out")
+```
+A few examples:
+
+linear (default)
+bounce
+sine
+circular
+many more...
+Save as a GIF and add labels
+```{r}
+penguins %>%
+ggplot(aes(x = body_mass_g, 
+            y = bill_depth_mm, 
+            color = species)) +
+  geom_point() +
+  transition_states(
+     year, # what are we animating by
+     transition_length = 2, #The relative length of the transition.
+     state_length = 1 # The length of the pause between transitions
+   )+
+  ease_aes("sine-in-out") +
+labs(title = 'Year: {closest_state}') +
+anim_save(here("Week_08","Output","mypengiungif.gif"))
+```
+
+### Magick - advanced image processing
+Manipulate impages, change color scale in images, put images on plots
+More info [here](https://cran.r-project.org/web/packages/magick/vignettes/intro.html)
+Read in an image of a penguin 
+```{r}
+penguin<-image_read("https://pngimg.com/uploads/penguin/pinguin_PNG9.png")
+penguin
+```
+Save you plot as png
+```{r}
+penguins %>%
+ggplot(aes(x = body_mass_g, 
+            y = bill_depth_mm, 
+            color = species)) +
+  geom_point()
+  ggsave(here("Week_08","Output","penguinplot.png"))
+```
+Read in the plot as a magick image and make a composite plot
+The back plot goes first
+```{r}
+penplot<-image_read(here("Week_08","Output","penguinplot.png"))
+out <- image_composite(penplot, penguin, offset = "+70+30")
+out
+```
+
+You can do this with gifs too 
+```{r}
+# Read in a penguin gif
+pengif<-image_read("https://media3.giphy.com/media/H4uE6w9G1uK4M/giphy.gif")
+outgif <- image_composite(penplot, pengif, gravity = "center")
+animation <- image_animate(outgif, fps = 10, optimize = TRUE)
+animation
+```
+
+////how do you change the viewing size?

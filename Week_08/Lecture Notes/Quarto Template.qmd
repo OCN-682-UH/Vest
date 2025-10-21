@@ -1,0 +1,26 @@
+---
+title: "Quarto Base Template"
+subtitle: Creating my most B-E-A-utiful Quarto document! 
+author: "Jordan Vest"
+date: today
+title-block-banner: "images/fgbcrcptech2012.jpg"
+format: 
+  html:
+    toc: true
+    toc-title: "Are you lost? Look here!" 
+    theme: darkly
+    smooth-scroll: true 
+    respect-user-color-scheme: true 
+    link-external-newwindow: true
+    linkcolor: pink 
+    page-layout: article
+    code-copy: true 
+    lightbox: true 
+    code-fold: true
+    code-summary: "Hey kid, you wanna see some code?"
+#knitr: 
+#  opts_chunk: 
+#    fig.path: "../Output/" # added ../ because qmd is in scripts folder 
+---
+
+

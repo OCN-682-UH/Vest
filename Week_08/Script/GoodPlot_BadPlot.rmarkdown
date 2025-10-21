@@ -1,0 +1,320 @@
+---
+title: "Goodplot_Badplot"
+author: "Jordan Vest"
+date: today
+format: 
+  html:
+    toc: true
+    toc-title: "Are you lost? Look here!" 
+    smooth-scroll: true 
+    code-copy: true 
+    lightbox: true 
+    code-fold: true
+    code-fold-show: true
+    code-summary: "Click me for code!"
+---
+
+
+
+# Introduction
+
+This is my submission for the *Good Plot / Bad Plot* assignment.  
+
+The dataset visualized here comes from the **TidyTuesday Outer Space Objects dataset** (2024-04-23). It contains every known launch of space objects (satellites, debris, etc.) by country and year.  
+
+### Load Libraries and data
+
+
+```{r}
+#| message: false
+#| warning: false
+
+library(tidyverse)
+library(rnaturalearth)
+library(ggthemes)
+library(mapdata)
+library(gganimate)
+library(viridis)
+library(sf)
+library(gifski)
+library(here)
+
+# Load data
+space_objects <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-04-23/outer_space_objects.csv")
+world <- map_data("world")
+```
+
+
+
+# Bad Plot
+*_Launchapalooza_* is intended to be be visually painful, confusing, and misleading by violating core principles of
+
+### Data Prep
+
+
+```{r}
+#| message: false
+#| warning: false
+# Only had name of country so needed to match that to coordinates using rnaturalearth
+countries <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") %>%
+  st_centroid() %>%
+  mutate(lon = st_coordinates(.)[,1],
+         lat = st_coordinates(.)[,2]) %>%
+  st_drop_geometry() %>%
+  select(iso_a3, lon, lat)
+
+# Join coordinates so I can plot them as points
+launches_coords <- space_objects %>%
+  left_join(countries, by = c("Code" = "iso_a3")) %>%
+  drop_na(lon, lat)
+```
+
+
+
+#### Save the data
+
+
+```{r}
+#| message: false
+#| warning: false
+write.csv(launches_coords, here("Week_08", "Data", "clean_launches_coords.csv"), row.names = FALSE)
+```
+
+
+
+### Bad Plot
+
+
+```{r}
+#| message: false
+#| warning: false
+badplot <- ggplot() +
+  geom_polygon(data = world, aes(x = long, y = lat, group = group),
+               fill = "orange", color = "purple", linewidth = 1.2) +
+  geom_point(data = launches_coords,
+             aes(x = lon, y = lat, size = num_objects, color = Year),
+             shape = 17, alpha = 0.9) +
+  scale_color_viridis(option = "plasma", direction = -1) +
+  theme_economist() +
+  coord_map("polyconic", xlim = c(-180, 180), ylim = c(-50, 90)) +
+  ggtitle("Launchapalooza", subtitle = "Every Launch of Space Junk Ever") +
+  xlab("Longitude (kinda)") +
+  ylab("Latitude (ish)") +
+  theme(
+      panel.background = element_rect(fill = "pink"),
+      plot.title = element_text(size = 24, hjust = 0.5, face = "italic", color = "darkred"),
+      plot.subtitle = element_text(size = 16, hjust = 0.5, face = "bold", color = "darkblue"),
+      legend.position = "bottom",
+      axis.text = element_text(size = 16, face = "bold")
+  ) +
+  transition_time(Year) +
+  labs(caption = "Year: {frame_time}") +
+  ease_aes('linear')
+badplot
+```
+
+
+
+#### Save plot to the right place
+
+
+```{r}
+#| message: false
+#| warning: false
+ggsave(filename = here("Week_08", "Output", "badplot.png"), plot = badplot, width = 6, height = 4, dpi = 300)
+```
+
+
+
+### Make the bad plot an even worse animation
+
+
+```{r}
+#| message: false
+#| warning: false
+#Commenting out because it won't render in quarto :'(
+#bad_anim <- animate(
+ # badplot,
+  #nframes = 100,
+ # fps = 10,
+ # width = 900,
+ # height = 500,
+ # renderer = gifski_renderer(loop = TRUE))
+```
+
+
+
+#### Save plot to the right place
+
+
+```{r}
+#| message: false
+#| warning: false
+# ggsave(filename = here("Week_08", "Output", "bad_anim.gif"), animation = bad_anim, width = 6, height = 4, dpi = 300)
+```
+
+
+
+### Display animation
+
+
+```{r}
+#| message: false
+#| warning: false
+# knitr::include_graphics(here("Week_08", "Output", "bad_anim.gif"))
+```
+
+
+
+### Why This Plot Is Bad
+
+* **Too much chaos**
+
+  * Uses **all launches** and ISO codes, which means some big groups like the European Space Agency are missing.
+  * Points are everywhere—Europe, USA, and Asia are so packed it’s basically impossible to tell what’s going on.
+
+* **Misleading visuals**
+
+  * Point size exaggerates some launches and hides smaller ones.
+  * Pink background + orange land + purple borders = headache.
+  * Map projection distorts places, making it harder to interpret.
+
+* **Bad labels and legends**
+
+  * Axes are “Longitude (kinda)” and “Latitude (ish)”—very helpful (not)
+  * Title/subtitle colors fight with each other
+  * Legend is messy, hard to read, and doesn’t really tell you anything.
+
+* **Animation doesn’t help**
+
+  * Points move over time, but it doesn’t clarify anything. Instead, it just adds to the noise and makes it hard to see the patterns.
+
+* **Overall effect**
+
+  * This plot breaks basically every rule from Healy and Wilke about making data readable.
+  * It’s fun to look at for a second, but you learn nothing from it.
+
+# Good Plot
+
+### Data prep
+
+
+```{r}
+#| message: false
+#| warning: false
+# Select top 5 entities by total launches (exclude "World")
+top_5_entities <- space_objects %>%
+  filter(Entity != "World") %>%
+  group_by(Entity) %>%
+  summarise(total_launches = sum(num_objects, na.rm = TRUE), .groups = 'drop') %>%
+  arrange(desc(total_launches)) %>%
+  slice_head(n = 5) %>%
+  pull(Entity)
+
+# Prepare data for plotting
+top_data <- space_objects %>%
+  filter(Entity %in% top_5_entities) %>%
+  group_by(Year, Entity) %>%
+  summarise(launches = sum(num_objects, na.rm = TRUE), .groups = 'drop') %>%
+  complete(Year = 1960:2020, Entity, fill = list(launches = 0))
+
+# Reorder entities: largest contributer to the back of the stack
+entity_order <- top_data %>%
+     group_by(Entity) %>%
+     summarise(total = sum(launches)) %>%
+     arrange(desc(total)) %>%
+     pull(Entity)
+top_data$Entity <- factor(top_data$Entity, levels = entity_order)
+```
+
+
+
+##### Save Data to Folder
+
+
+```{r}
+#| message: false
+#| warning: false
+write.csv(top_5_entities, here("Week_08", "Data", "clean_top_5_entities.csv"), row.names = FALSE)
+write.csv(top_data, here("Week_08", "Data", "top_data_summary.csv"), row.names = FALSE)
+write.csv(entity_order, here("Week_08", "Data", "rank_table.csv"), row.names = FALSE)
+```
+
+
+
+### The Good Plot
+
+
+```{r}
+#| message: false
+#| warning: false
+goodplot <- ggplot(top_data, aes(x = Year, y = launches, fill = Entity)) +
+     geom_area(alpha = 0.85, color = "white", size = 0.25) +
+     scale_fill_viridis_d(option = "mako", end = 0.95) +
+     scale_y_sqrt(
+         expand = expansion(mult = c(0, 0.05))
+     ) +
+     scale_x_continuous(
+         breaks = seq(1960, 2020, by = 10),
+         limits = c(1960, 2020),
+         expand = expansion(mult = c(0, 0))
+     ) +
+     labs(
+         title = "The Space Launch Race: 1960–2020",
+         subtitle = "Launches by the top 10 spacefaring entities",
+         x = "Year",
+         y = "Number of Launches (sqrt scale)",
+         fill = "Entity"
+     ) +
+     theme_minimal(base_size = 14) +
+     theme(
+         plot.title = element_text(face = "bold", size = 20, hjust = 0.5),
+         plot.subtitle = element_text(size = 13, hjust = 0.5, face = "italic"),
+         axis.text = element_text(color = "gray20", face = "bold"),
+         axis.title = element_text(face = "bold", size = 13),
+         legend.position = "bottom",
+         legend.justification = "center",
+         legend.title = element_text(face = "bold", size = 12),
+         legend.text = element_text(size = 11),
+         panel.grid.minor = element_blank(),
+         panel.grid.major.x = element_blank()
+     )
+  goodplot
+```
+
+
+
+#### Save plot to the right place
+
+
+```{r}
+#| message: false
+#| warning: false
+ggsave(filename = here("Week_08", "Output", "goodplot.png"), plot = goodplot, width = 6, height = 4, dpi = 300)
+```
+
+
+
+### Why this plot is *so* good
+
+
+* **Focus on the important stuff**
+
+  * Only shows the **top 5 countries**, so it’s easy to see who actually dominates space launches.
+  * Stacking makes sense: biggest contributor (USA) is at the back, smaller ones on top.
+
+* **Colors and scaling that actually help**
+
+  * Y-axis uses a **square root scale**, so small countries aren’t completely invisible.
+  * Viridis “mako” palette looks nice and is easy to tell apart—even if you’re colorblind.
+
+* **Clear labels and axes**
+
+  * X-axis shows decades, so you can see trends over time.
+  * Axis titles are bold and readable.
+  * Legend is simple.
+
+* **Clean theme**
+
+  * `theme_minimal()` keeps the gridlines and background subtle.
+  * No distracting chart junk—just the data.
