@@ -1,0 +1,100 @@
+---
+title: "Wk09_HW"
+author: "Jordan Vest"
+date: today
+format: html
+---
+
+## Instructions
+Working with intertidal data. Today you will need to use skills that you have learned in working with words to clean up some issues with the character data and use what you learned today to reorder your factors into orders that make sense. (Also the column headers could be better...). HINT: New package idea to fix this is using the janitor package.
+
+Your goal, as per usual, is to make a plot, any plot where one of the axes is a factor. Save everything in the appropriate folders.
+
+You have two possible files to play with in the data folder (you don't HAVE to use both): intertidal.csv and intertidal_latitude.csv (as well as a data dictionary)
+
+Importantly, if you decide to visualize anything by tide height it should go from low to mid to high tide on the plot and if you decide to visualize by site it should go in order of latitude (e.g. south to north or north to south).
+
+### Load librararies
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+library(janitor)
+library(here)
+library(viridis)
+```
+
+### Load data
+```{r}
+#| message: false
+#| warning: false
+intertidal <- read_csv(here("Week_09", "Data", "intertidaldata.csv"))
+glimpse(intertidal)
+```
+
+### Clean column names with stringr
+```{r}
+names(intertidal) <- names(intertidal) %>%
+  str_to_lower() %>%
+  str_replace_all(" ", "_") %>%
+  str_replace_all("\\(counts\\)", "") %>%
+  str_trim()
+glimpse(intertidal)
+```
+
+### Take barnacle columns and make them factors
+```{r}
+intertidal <- intertidal %>%
+  mutate(quadrat = str_to_lower(quadrat)) %>%
+  mutate(quadrat = factor(quadrat, levels = c("low", "mid", "high")))
+glimpse(intertidal)
+```
+
+### Pivot to long data
+```{r}
+intertidal_long <- intertidal %>%
+  select(site, transect, quadrat,
+         small_barnacles, large_barnacles, gooseneck_barnacles) %>%
+  pivot_longer(
+    cols = c(small_barnacles, large_barnacles, gooseneck_barnacles),
+    names_to = "barnacle_type",
+    values_to = "count"
+  )
+glimpse(intertidal_long)
+```
+
+### Fix legend labels
+```{r}
+intertidal_long <- intertidal_long %>%
+  mutate(barnacle_type = str_replace_all(barnacle_type, "_", " ") %>%
+           str_to_title())
+```
+
+### Plot data
+```{r}
+#| message: false
+#| warning: false
+intertidal_plot<-ggplot(intertidal_long, aes(x = quadrat, y = count, fill = barnacle_type)) +
+  geom_col(na.rm = TRUE) +
+  scale_fill_viridis_d(option = "C", end = 0.9) +
+  labs(
+    title = "Barnacle Counts by Tide Height",
+    x = "Tide Height (Quadrat)",
+    y = "Count",
+    fill = "Barnacle Type"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank()
+  )
+intertidal_plot
+```
+
+### Save plot properly
+```{r}
+#| message: false
+#| warning: false
+ggsave(filename = here("Week_09", "Output", "intertidal_plot.png"), plot = intertidal_plot, width = 6, height = 4, dpi = 300)
+```
+
