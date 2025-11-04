@@ -47,7 +47,7 @@ world <- map_data("world")
 ```{r}
 #| message: false
 #| warning: false
-# Only had name of country so needed to match that to coordinates using rnaturalearth
+# Only had name of country and ISO3 code so I needed to match that to coordinates using rnaturalearth
 countries <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf") %>%
   st_centroid() %>%
   mutate(lon = st_coordinates(.)[,1],
@@ -102,34 +102,6 @@ badplot
 #| message: false
 #| warning: false
 ggsave(filename = here("Week_08", "Output", "badplot.png"), plot = badplot, width = 6, height = 4, dpi = 300)
-```
-
-### Make the bad plot an even worse animation
-```{r}
-#| message: false
-#| warning: false
-#Commenting out because it won't render in quarto :'(
-#bad_anim <- animate(
- # badplot,
-  #nframes = 100,
- # fps = 10,
- # width = 900,
- # height = 500,
- # renderer = gifski_renderer(loop = TRUE))
-```
-
-#### Save plot to the right place
-```{r}
-#| message: false
-#| warning: false
-# ggsave(filename = here("Week_08", "Output", "bad_anim.gif"), animation = bad_anim, width = 6, height = 4, dpi = 300)
-```
-
-### Display animation
-```{r}
-#| message: false
-#| warning: false
-# knitr::include_graphics(here("Week_08", "Output", "bad_anim.gif"))
 ```
 
 ### Why This Plot Is Bad

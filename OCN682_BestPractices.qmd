@@ -3,24 +3,45 @@ title: "OCN_682_BestPractices"
 author: "Jordan Vest"
 format: html
 ---
+[data viz](https://github.com/cxli233/FriendsDontLetFriends)
 
-## Quarto
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+## Geometry & Mapping
 
-## Running Code
+Use the most appropriate geometry (e.g., scatterplot for correlation, boxplot for distribution).
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+Use misleading or inappropriate geometry (e.g., pie charts for high-cardinality data, stacked bars for individual points).
 
-```{r}
-1 + 1
-```
+Graphical Integrity (Tufte); Principle of Appropriateness (Wilke)
 
-You can add options to executable code like this 
+## Color
 
-```{r}
-#| echo: false
-2 * 2
-```
+Use perceptually uniform, color-blind-friendly palettes (e.g., Viridis, ColorBrewer Set 1). Use color to encode meaning (semantic mapping).
 
-The `echo: false` option disables the printing of code (only output is displayed).
+Use high-contrast, non-semantic, or aggressive colors (e.g., rainbow palette, neon colors, red/green for non-binary data).
+
+Color as a Signal (Healy); Perceptual Accuracy (Wilke)
+
+## Data-Ink Ratio
+
+Maximize the data-ink ratio: every visual element should convey data. Use minimalist themes (e.g., theme_minimal).
+
+Introduce excessive chart junk: heavy borders, dark/busy backgrounds, unnecessary 3D effects, and ornate design elements.
+
+Maximizing the Data-Ink Ratio (Tufte); Clarity and Efficiency (Wilke)
+
+## Typography & Text
+
+Use legible, concise, and consistent text. Set a clear, informative title and precise axis labels.
+
+Use conflicting fonts, extremely small or oversized text, verbose titles, and distracting colors for labels.
+
+Text and Typography (Healy); Legibility and Annotation (Wilke)
+
+## Axis/Scale
+
+Always start quantitative axes at zero (especially for bar charts). Use consistent scales when comparing across facets.
+
+## Faceting/Grouping
+
+Group elements closely for easy comparison. Use facets sparingly and ensure scale consistency across panels.

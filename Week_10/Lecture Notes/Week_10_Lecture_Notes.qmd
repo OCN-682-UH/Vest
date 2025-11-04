@@ -1,0 +1,487 @@
+---
+title: "Week_10_Lecture_Notes"
+format: html
+---
+
+## Why write a function
+Anytime you have a task that you want to use more than once
+Keeps your script clean
+Avoids mistakes with copy and paste
+Minimizes places where you need to update your code
+
+Let's use an example where we want to rescale data in multiple columns (value - min/(max - min)
+
+```{r}
+library(tidyverse)
+```
+Set the random number you generate from
+```{r}
+set.seed(10)
+```
+Generate random numbers
+```{r}
+df <- tibble(
+  a = rnorm(10), # draws 10 random values from a normal distribution
+  b = rnorm(10),
+  c = rnorm(10),
+  d = rnorm(10)
+)
+head(df)
+```
+Rescale every column individually
+```{r}
+df<-df %>%
+  mutate(a = (a-min(a, na.rm = TRUE))/(max(a, na.rm = TRUE)-min(a, na.rm = TRUE)))
+```
+Now copy/paste same code for each column 
+```{r}
+df<-df %>%
+  mutate(a = (a-min(a, na.rm = TRUE))/(max(a, na.rm = TRUE)-min(a, na.rm = TRUE)),
+         b = (b-min(b, na.rm = TRUE))/(max(a, na.rm = TRUE)-min(b, na.rm = TRUE)),
+         c = (c-min(c, na.rm = TRUE))/(max(c, na.rm = TRUE)-min(c, na.rm = TRUE)),
+         d = (d-min(d, na.rm = TRUE))/(max(d, na.rm = TRUE)-min(d, na.rm = TRUE)))
+```
+Notice the mistake! Where you expect b there is an a
+## We can write a function for this
+```{r}
+rescale01 <- function(x) {
+  value<-(x-min(x, na.rm = TRUE))/(max(x, na.rm = TRUE)-min(x, na.rm = TRUE))
+  return(value)
+}
+df %>%
+  mutate(a = rescale01(a),
+         b = rescale01(b),
+         c = rescale01(c),
+         d = rescale01(d))
+```
+### Even better
+```{r}
+df %>%
+  mutate(all)
+```
+
+# Steps to Creating a Function
+You need to pick a name for the function. Here I’ve used rescale01 because this function rescales a vector to lie between 0 and 1.
+
+You list the inputs, or arguments, to the function inside function. Here we have just one argument. If we had more the call would look like function(x, y, z).
+
+You place the code you have developed in body of the function, a { block that immediately follows function(...).
+
+Return tells us what values we want returned when you run the function
+Note: It is way easier to create a function when you already wrote the code rather than creating the function from scratch.
+
+```{r}
+rescale01 <- function(x) {
+  value<-(x-min(x, na.rm = TRUE))/(max(x, na.rm = TRUE)-min(x, na.rm = TRUE))
+  return(value)
+}
+```
+
+This is the first step to building your own collection of functions into a library that is able to process all your data
+
+### Let's make a temperature conversion funtion
+```{r}
+temp_C <- (temp_F - 32) * 5 / 9
+```
+Step 1: Name Function
+f_to_c <- function() { }
+
+Step 2: Put in the equation
+```{r}
+f_to_c <- function() {
+temp_C <- (temp_F - 32) * 5 / 9
+}
+```
+Step 3: Decide what the arguments are
+```{r}
+f_to_c <- function(temp_F) {
+  temp_C <- (temp_F - 32) * 5 / 9
+}
+```
+Add return
+```{r}
+f_to_c <- function(temp_F) {
+  temp_C <- (temp_F - 32) * 5 / 9
+  return(temp_C)
+}
+```
+Test it
+```{r}
+f_to_c(32)
+```
+Try it with celcius to Kelvin
+```{r}
+Cel_to_Kelvin <- function(cel) {
+  Kelvin <- cel + 273.15
+  return(Kelvin)
+}
+```
+
+## Making plots into a funciton
+Let's say you have a specifically formatted plot that you like and that you plan to use over and over again. By turning it into a function, you only have to code it once.
+
+Let's use our favorite penguin dataset and make a nice plot line plot.
+
+```{r}
+library(palmerpenguins)
+library(PNWColors) # for the PNW color palette 
+# you may need to install the PNWColors library if you haven't used it yet
+pal<-pnw_palette("Lake",3, type = "discrete") # my color palette 
+ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm, color = island))+
+  geom_point()+
+  geom_smooth(method = "lm")+ # add a linear model
+  scale_color_manual("Island", values=pal)+   # use pretty colors and another example of how to manually change the legend title for colors
+  theme_bw()
+```
+Can make a function for your themes! 
+
+Name and set up the function 
+```{r}
+myplot<-function(){
+pal<-pnw_palette("Lake",3, type = "discrete") # my color palette 
+ggplot(penguins, aes(x = body_mass_g, y = bill_length_mm, color = island))+
+  geom_point()+
+  geom_smooth(method = "lm")+ # add a linear model
+  scale_color_manual("Island", values=pal)+   # use pretty colors and change the legend title
+  theme_bw()
+}
+```
+What do you think our arguments should be?
+Make the names broad so it can be applicable to several values
+Make data, x, y flexible and color and theme static
+```{r}
+myplot<-function(data, x, y){
+pal<-pnw_palette("Lake",3, type = "discrete") # my color palette 
+ggplot(data, aes(x = x, y =y , color = island))+
+  geom_point()+
+  geom_smooth(method = "lm")+ # add a linear model
+  scale_color_manual("Island", values=pal)+   # use pretty colors and change the legend title
+  theme_bw()
+}
+```
+When making functions you have to be super explicit about where columns are bc a function won't know that you have a column inside a dataset
+"Even though body_mass_g exists within the penguin dataframe, there is still no individual parameter called body_mass_g in our environment and R is confused. There is a solution though from within the {rlang} package (a part of the tidyverse)!
+
+{rlang} uses what is literally called a"curly-curly" {{}} to help us assign variables that are column names in dataframes.
+
+Let's add curly-curlies to the column names"
+```{r}
+myplot<-function(data, x, y){ 
+pal<-pnw_palette("Lake",3, type = "discrete") # my color palette 
+ggplot(data, aes(x = {{x}}, y = {{y}} , color = island))+
+  geom_point()+
+  geom_smooth(method = "lm")+ # add a linear model
+  scale_color_manual("Island", values=pal)+   # use pretty colors and change the legend title
+  theme_bw()
+}
+```
+Test
+```{r}
+myplot(data = penguins, x = body_mass_g, y = bill_length_mm)
+```
+
+```{r}
+myplot(data = penguins, x = body_mass_g, y = flipper_length_mm)
+```
+
+## Adding defaults to minimize typing
+```{r}
+myplot<-function(data = penguins, x, y){
+pal<-pnw_palette("Lake",3, type = "discrete") # my color palette 
+ggplot(data, aes(x = {{x}}, y = {{y}} , color = island))+
+  geom_point()+
+  geom_smooth(method = "lm")+ # add a linear model
+  scale_color_manual("Island", values=pal)+   # use pretty colors and change the legend title
+  theme_bw()
+}
+```
+
+```{r}
+myplot(x = body_mass_g, y = flipper_length_mm)
+```
+Default is penguins data but you can always change it by specifying
+
+## You can layer onto the plot like any other ggplot
+```{r}
+myplot(x = body_mass_g, y = flipper_length_mm)+
+  labs(x = "Body mass (g)",
+       y = "Flipper length (mm)")
+```
+
+## If-else Statements
+```{r}
+a <- 4
+b <- 5
+```
+
+Suppose that if a > b then f should be = to 20, else f should be equal to 10. Using if/else we:
+
+```{r}
+if (a > b) { # my question
+  f <- 20 # if it is true give me answer 1
+    } else { # else give me answer 2
+  f <- 10
+}
+```
+
+Using if...else... we can make our function even more flexible. Let's say we want the option of adding the geom_smooth lines. We can create a variable that if set to TRUE add the geom_smooth, otherwise print without.
+
+First add a new argument for lines and make the default TRUE for ease
+```{r}
+myplot<-function(data = penguins, x, y, lines=TRUE ){ # add new argument for lines
+pal<-pnw_palette("Lake",3, type = "discrete") # my color palette 
+if(lines==TRUE){
+ggplot(data, aes(x = {{x}}, y = {{y}} , color = island))+
+  geom_point()+
+  geom_smooth(method = "lm")+ # add a linear model
+  scale_color_manual("Island", values=pal)+   # use pretty colors and change the legend title
+  theme_bw()
+}
+else{
+ggplot(data, aes(x = {{x}}, y = {{y}} , color = island))+
+  geom_point()+
+  scale_color_manual("Island", values=pal)+   # use pretty colors and change the legend title
+  theme_bw()
+}
+}
+```
+Test it
+```{r}
+myplot(x = body_mass_g, y = flipper_length_mm)
+```
+```{r}
+myplot(x = body_mass_g, y = flipper_length_mm, lines = FALSE)
+```
+
+# Getting Help 
+Lecture part 2
+...have you tried sleeping?
+[R Cookbook](https://rc2e.com/gettingstarted)
+## If you’re asking: What package or function should I use to do this thing?
+* Google it: (I ALWAYS have google open when I am coding)
+
+Search with the keywords and package/function name if known, and include .R in the search keywords (e.g. “dplyr::mutate add column in .R” instead of “mutate variable”)
+
+“R” is generic - so consider using “R software” or “.R” Start learning and using language common in R communities & publications (e.g. R4DS), like data frame or tibble instead of spreadsheet
+
+For now, anything reading, wrangling, ggplot2 related: considering navigating to documentation from [tidyverse.org](https://tidyverse.org/), [rdocumentation](https://www.rdocumentation.org/), or [RStudio/Posit community](https://forum.posit.co/)
+
+Don’t know what package/function to use for your purpose? Use CRAN Task Views to help you find it (grouped by topic) to search for packages by keyword
+
+Use R-specific search tools:
+rdocumentation.org
+rseek.org
+
+For more getting help & searching recommendations, see Ch. 1 of the R Cookbook 2nd Edition by JD Long and Paul Teers
+
+## If R...can’t find a function that you know exists:
+
+Symptom:
+‘Error in _________: could not find function “_________”
+Likely diagnoses:
+
+The library containing the function you’re trying to use hasn’t been attached
+You’ve misspelled or mistyped the function name
+Possible solutions:
+
+Make sure you’ve attached the required package with library(package_name) - and remember this line should exist in your script before the code that uses a function from that package
+Make sure you’ve run the line of code that attaches the necessary package
+Check the function spelling/formatting very carefully
+
+## If R...can’t find the pipe operator:
+Symptom:
+‘Error in ____ %>% ____ : could not find function "%>%"’
+Likely diagnoses:
+
+Haven’t attached the tidyverse (w/ library(tidyverse)) before using the pipe
+Haven’t run the line of code to attach the tidyverse
+Possible solutions:
+
+Make sure you’ve attached the tidyverse with library(tidyverse) - and remember this line should exist in your script before the code that uses %>%
+Make sure you’ve run the line of code that attaches the tidyverse
+
+## If R...can’t find an object (e.g. an object or variable) that you know you’ve stored:
+Symptom:
+
+‘Error in ____ : object ‘_____’ not found’
+Likely Diagnosis:
+
+The object hasn’t been created or stored
+You’ve mistyped the object name
+Possible Solution:
+
+Make sure you’ve run the line(s) of code where you read-in or create the object
+Make sure you’ve spelled/typed the object name exactly as it exists in the Environment
+Use ls() to check which objects exist in your current workspace (and if it’s not there, then it hasn’t been created/stored yet)
+
+## If R…tells you it’s ignoring an argument within a function
+Symptom:
+
+‘Warning: Ignoring unknown parameters: ____’
+Possible diagnoses:
+
+You’ve included an argument that doesn’t exist for that function
+You’ve mistyped an argument that does exist for that function
+Possible solutions:
+
+Check to ensure that the argument you’re trying to use for that function (a) exists, and (b) is entered exactly how R expects it to be in your code - especially checking for spelling, abbreviation & capitalization
+How to find out what arguments are accepted by which functions:
+
+Viewing the R documentation with ?function_name, and look in the ‘Arguments’ section (or ‘Aesthetics’ section for geoms in ggplot2)
+
+## If you…are trying to make a basic ggplot2 graph and you accidentally use %>% between layers instead of a +
+Symptoms:
+
+‘Error: mapping must be created by aes()
+Did you use %>% instead of +?’
+Diagnosis:
+
+Used the pipe operator %>% instead of + to add ggplot2 layers?
+Possible solutions:
+
+Switch to + for ggplot2!
+
+## If you…think your ggplot code looks perfect and you’re not getting an error message, but only an empty graph is showing up:
+
+Possible diagnoses:
+
+Did you check what the data you’re trying to plot looks like? For example, did you accidentally filter out all observations in a previous step?
+Did you forget a plus sign to add the geom_* layer?
+Possible solutions:
+
+Make sure there is a plus sign (+) between all ggplot layers
+Look at the data you’re trying to plot to ensure it exists
+
+## If you…are trying to change some aesthetic in a ggplot graph, but you’re getting an error:
+Symptom:
+
+Error in rep(value[[k]], length.out = n) :
+              attempt to replicate an object of type 'closure'
+Possible diagnoses:
+
+Did you forget that when you’re referencing a variable in ggplot, it needs to be within an aes() function?
+Possible solutions:
+
+Make sure that when you’re updating a graph aesthetic based on a variable in the data frame, you have that argument within aes().
+
+## If you...are trying to find a summary value for a variable that you know contains numbers, but you’re getting an NA result and/or a warning message:
+Symptom(s):
+
+NA returned when summary statistic value (e.g. mean) expected
+‘In __ : argument is not numeric or logical: returning NA’
+Possible diagnoses:
+
+The default argument of the function is na.rm = “FALSE”
+The class of non-NA values is not numeric (e.g.., there are words in the column or R otherwise doesn’t know the class should be “numeric”)
+Possible solutions:
+
+If the variable is numeric (check class), update argument to na.rm = “TRUE”
+Coerce variable class to “numeric” if appropriate/possible
+
+## Can’t figure out what’s going on from the error message directly?
+Look over code very carefully - character-by-character and space-by-space. Run line-by-line to see where it breaks. Some things to pay close attention to at this point:
+Are all parentheses matching pairs?
+Have you typed in all functions, objects, and conditions in exactly correctly?
+If you run something and it doesn’t show up, did you call it to have it show up, or have you just asked R to store it?
+Have you looked at all intermediate data frames during wrangling to make sure data are being subset & transformed as expected?
+2 Google the copied & pasted error message. Someone else has encountered and solved it before. Find them (often on Stack Overflow). Beware rabbit holes and grumps.
+
+3 Take a break and come back to it.
+
+4 Make a small, reproducible example (reprex up next!) and see if you can recreate the error. I realize and resolve many errors by trying to make something work in a simpler, self-contained example.
+
+### Supportive R Community
+Stack overflow;
+
+The RStudio community
+"#rstats" on BlueSky - no seriously, create an account. Some to follow right away for maximum R learning, commentary and community: @dataandme.bsky.social, @cedricsherer.com, @juliasilge.com, @posit.co, @kawawoo.com. @themockup.blog, @jennybryan.bsky.social,@noamross.net, @johnthegeek.com, @dslc.io, @womenindataviz.bsky.social, @juliesquid.bsky.social, @hadleywickham.bsky.social, @paul-buerkner.bsky.social, @r-foundation.bsky.social, @quarto.org, @bigbookofr.bsky.social
+
+### LLMs
+Chatbots can only be as smart of you. Use them as a tutor to explain and understand but without fundamentals and problem solving skills you are kneecapping yourself
+
+[ChatGPT: Smart, but not smart enough - Can generative AI teach you to code? It's complicated](https://www.codecademy.com/resources/blog/can-chatgpt-ai-teach-you-to-code)
+[ChatGPT R Package](https://github.com/jcrodriguez1989/chatgpt)
+[ChatGPT Cheat Sheet for Data Science](https://www.datacamp.com/cheat-sheet/chatgpt-cheat-sheet-data-science)
+
+Positron is essentially RStudio with other languages and directly interacts with LLM. Still in dev. Look into it.
+Gemini Pro is free! Good at explaining figures and brainstorming and comprehends code well 
+Chat5 is best for debugging quarto and doc writing. Can integrate into RStudio as package allowing chat to explain R code piece by piece and give advice on stats model
+
+#### Do's and Don'ts
+Use it as a thinking partner, not an oracle.
+Provide full context (goal, reprex, error).
+Iterate: ask for refinements (e.g., “dplyr-only version”).
+Ask for explanations (concepts + why the fix works).
+Validate code locally; read docs.
+Keep privacy: redact sensitive/unpublished data.
+
+Don’t paste confidential data or credentials.
+Don’t copy code blindly; avoid cargo-culting.
+Don’t ask vague questions without a reprex.
+Don’t skip learning—use AI as a tutor.
+Don’t rely on hallucinated packages/functions—verify.
+
+## Asking help from humans
+
+```{r}
+library("reprex")
+library("datapasta")
+library("styler")
+```
+When asking the R community for help, it is really important to give them enough information to help you. Remember, they don't have your computer or your data and they are not in your head. Help them help you.
+
+By running code with {reprex}, you can create a reproducible example to post to Stack Overflow, Slack, GitHub, or an email to your collaborator.
+
+### reprex
+Let's say you are trying to make a plot with the mpg dataset and you hit an error.
+```{r}
+library(tidyverse)
+mpg %>%
+  ggplot(aes(x = displ, y = hwy))%>%
+  geom_point(aes(color = class))
+```
+## Error in geom_point():
+## ! mapping must be created by aes().
+## ℹ Did you use %>% or |> instead of +?
+Go to Addins -> Render Reprex -> Paste to the program you want.
+Make sure to "append session info"
+
+### datapasta
+Let's say you have your own csv. Stack Overflow doesn't know your data. Datapasta will make a reproducible dataframe for you 
+1. Open csv file and copy paste into R
+2. Copy the code and got to Addins -> paste as tribble and then name it something.
+3. now have a beautiful dataframe with your broken code self contained
+
+### Do's and Don'ts of reprex
+1. Use the smallest, simplest, most built-in data possible. e.g. using datapasta
+2. Include commands on a strict “need to run” basis.
+* Ruthlessly strip out anything unrelated to the specific matter at hand.
+*Include every single command that is required, e.g. loading specific packages
+3. Pack it in, pack it out, and don’t take liberties with other people’s computers. You are asking people to run this code!
+* Don’t start with rm(list = ls()). It is anti-social to clobber other people’s workspaces.
+* Don’t start with setwd("C:\Users\jenny\path\that\only\I\have"), because it won’t work on anyone else’s computer.
+* Don’t mask built-in functions, i.e. don’t define a new function named c or mean.
+*If you change options, store original values at the start, do your thing, then restore them.
+*If you create files, delete them when you’re done
+4. Use good coding style
+
+The reprex code:
+* Must run and, therefore, should be run by the person posting. No faking it.
+* Should be easy for others to digest, so they don’t necessarily have to run it. You are encouraged to include selected bits of output.
+* Should be easy for others to copy + paste + run, if and only if they so choose. Don’t let inclusion of output break executability.
+[Good Resource](https://reprex.tidyverse.org/articles/reprex-dos-and-donts.html)
+
+# Homework
+1. Use any dataset you would like and make two useful functions. One that is a plot and one that is not. Turn in your functions using Quarto with at least 2 examples per function showing its flexibility. Due, as always, at 1pm on Tuesday.
+
+3 points for your plot functions
+
+3 points for your "not plot" functions
+
+2 points for proper coding etiquette
+
+2 points for your file structire 
+2. Make some simple code and add a bug. Use datapasta and reprex to make a reproducible example and post it to our slack channel. Make sure to add your session info. include: a title, a reprex, sessionInfo(), expected vs. actual output, and what you tried.
+
+Ask someone to fix it and find a solution.
+See if you can debug someone elses errors
