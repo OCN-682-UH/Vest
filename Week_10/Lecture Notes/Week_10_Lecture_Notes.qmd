@@ -471,7 +471,7 @@ The reprex code:
 * Should be easy for others to copy + paste + run, if and only if they so choose. Don’t let inclusion of output break executability.
 [Good Resource](https://reprex.tidyverse.org/articles/reprex-dos-and-donts.html)
 
-# Homework
+# Homework 1
 1. Use any dataset you would like and make two useful functions. One that is a plot and one that is not. Turn in your functions using Quarto with at least 2 examples per function showing its flexibility. Due, as always, at 1pm on Tuesday.
 
 3 points for your plot functions
@@ -481,6 +481,8 @@ The reprex code:
 2 points for proper coding etiquette
 
 2 points for your file structire 
+
+# Homework 2
 2. Make some simple code and add a bug. Use datapasta and reprex to make a reproducible example and post it to our slack channel. Make sure to add your session info. include: a title, a reprex, sessionInfo(), expected vs. actual output, and what you tried.
 
 Ask someone to fix it and find a solution.
