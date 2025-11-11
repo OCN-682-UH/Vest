@@ -1,27 +1,44 @@
 ---
-title: "tt_week11"
-format: html
+title: "Flint, Michigan Lead"
+subtitle: "Tidy Tuesday Week 11"
+author: "Jordan Vest"
+date: today
+format: 
+  html:
+    toc: true
+    toc-title: "Are you lost? Look here!" 
+    theme: darkly
+    smooth-scroll: true 
+    respect-user-color-scheme: true 
+    link-external-newwindow: true
+    linkcolor: pink 
+    page-layout: article
 ---
 
-## Quarto
+## Get Ready for Plotting
 
-
-###Load libraries
+### Load libraries
 ```{r}
+#| message: false
+#| warning: false
 library(tidyverse)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
 ```
 
-###Load data
+### Load data
 ```{r}
+#| message: false
+#| warning: false
 flint_mdeq <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-11-04/flint_mdeq.csv")
 flint_vt   <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-11-04/flint_vt.csv")
 ```
 
-###Reorganize data
+### Reorganize data
 ```{r}
+#| message: false
+#| warning: false
 flint_long <- flint_mdeq %>%
   select(sample, lead, lead2) %>% # remove notes for plot
   pivot_longer(
@@ -42,8 +59,12 @@ flint_combined <- bind_rows(flint_long, flint_vt_long)
 
 ```
 
+## Iterate some plots
+
 ### Make a density plot
 ```{r}
+#| message: false
+#| warning: false
 ggplot(flint_combined, aes(x = lead_ppb, color = dataset, fill = dataset)) +
 # *new* knowledge on using geom density
   geom_density(alpha = 0.3) +       # semi-transparent fill
@@ -54,14 +75,19 @@ ggplot(flint_combined, aes(x = lead_ppb, color = dataset, fill = dataset)) +
     y = "Density"
   )
 ```
-This plot didn't tell me anything meaningful about the variance between the datasets
+This plot didn't tell me anything meaningful about the variance between the datasets. So I will try...
+
 ### Filter out lower values to see variance more clearly
 ```{r}
+#| message: false
+#| warning: false
 flint_filtered <- flint_combined %>%
   filter(lead_ppb > 5)
 ```
 ### Run the same plot with filtered data
 ```{r}
+#| message: false
+#| warning: false
 ggplot(flint_filtered, aes(x = lead_ppb, color = dataset, fill = dataset)) +
   geom_density(alpha = 0.3) +       # semi-transparent fill
   theme_minimal() +
@@ -71,10 +97,12 @@ ggplot(flint_filtered, aes(x = lead_ppb, color = dataset, fill = dataset)) +
     y = "Density"
   )
 ```
-This also didn't do it quite right 
+This also didn't do it quite right ...
 
-# Make a log scaled density plot
+### Make a log scaled density plot
 ```{r}
+#| message: false
+#| warning: false
 ggplot(flint_combined, aes(x = lead_ppb, color = dataset, fill = dataset)) +
 #*new* knowledge on using geom density
   geom_density(alpha = 0.3) + 

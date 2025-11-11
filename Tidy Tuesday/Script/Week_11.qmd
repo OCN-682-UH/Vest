@@ -1,0 +1,33 @@
+---
+title: "Tidy Tuesday Week 11 Homework"
+subtitle: Flint Michigan Lead Concentration 2015
+author: "Jordan Vest"
+date: today
+format: 
+  html:
+    toc: true
+    toc-title: "Are you lost? Look here!" 
+    theme: darkly
+    smooth-scroll: true 
+    respect-user-color-scheme: true 
+    link-external-newwindow: true
+    linkcolor: pink 
+    page-layout: article
+    code-copy: true 
+    lightbox: true 
+#knitr: 
+#  opts_chunk: 
+#    fig.path: "../Output/" # added ../ because qmd is in scripts folder 
+
+###Load Libraries
+```{r}
+library(tidyverse)
+library(tidytuesdayR)
+```
+
+###Load data
+```{r}
+flint_mdeq <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-11-04/flint_mdeq.csv")
+flint_vt   <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-11-04/flint_vt.csv")
+```
+
