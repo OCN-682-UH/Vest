@@ -1,0 +1,103 @@
+---
+title: "tt_week11"
+format: html
+---
+
+## Quarto
+
+
+###Load libraries
+```{r}
+library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+```
+
+###Load data
+```{r}
+flint_mdeq <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-11-04/flint_mdeq.csv")
+flint_vt   <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-11-04/flint_vt.csv")
+```
+
+###Reorganize data
+```{r}
+flint_long <- flint_mdeq %>%
+  select(sample, lead, lead2) %>% # remove notes for plot
+  pivot_longer(
+    cols = c(lead, lead2),   # columns to combine
+    names_to = "dataset",    # new column name for source
+    values_to = "lead_ppb"   # new column name for values
+  ) %>%
+  drop_na(lead_ppb)       # remove any missing values
+
+# Add the VT dataset
+flint_vt_long <- flint_vt %>%
+  select(sample, lead) %>%
+  mutate(dataset = "VT") %>%
+  rename(lead_ppb = lead)
+
+# Combine MDEQ and VT
+flint_combined <- bind_rows(flint_long, flint_vt_long)
+
+```
+
+### Make a density plot
+```{r}
+ggplot(flint_combined, aes(x = lead_ppb, color = dataset, fill = dataset)) +
+# *new* knowledge on using geom density
+  geom_density(alpha = 0.3) +       # semi-transparent fill
+  theme_minimal() +
+  labs(
+    title = "Density of Lead Levels by Dataset",
+    x = "Lead concentration (ppb)",
+    y = "Density"
+  )
+```
+This plot didn't tell me anything meaningful about the variance between the datasets
+### Filter out lower values to see variance more clearly
+```{r}
+flint_filtered <- flint_combined %>%
+  filter(lead_ppb > 5)
+```
+### Run the same plot with filtered data
+```{r}
+ggplot(flint_filtered, aes(x = lead_ppb, color = dataset, fill = dataset)) +
+  geom_density(alpha = 0.3) +       # semi-transparent fill
+  theme_minimal() +
+  labs(
+    title = "Density of Lead Levels by Dataset",
+    x = "Lead concentration (ppb)",
+    y = "Density"
+  )
+```
+This also didn't do it quite right 
+
+# Make a log scaled density plot
+```{r}
+ggplot(flint_combined, aes(x = lead_ppb, color = dataset, fill = dataset)) +
+#*new* knowledge on using geom density
+  geom_density(alpha = 0.3) + 
+  scale_x_log10() +
+    scale_color_discrete( 
+#also (frustratingly) new knowledge that geom density needs you to treat the fill and the line separately hence the double labels
+    labels = c("lead" = "MDEQ",
+               "lead2" = "MDEQ Outliers Removed",
+               "VT" = "Virginia Tech Community Science")
+  ) +
+  scale_fill_discrete(
+    labels = c("lead" = "MDEQ",
+               "lead2" = "MDEQ Outliers Removed",
+               "VT" = "Virginia Tech Community Science")
+  ) +
+  theme_minimal() +
+  labs(
+    title = "Density of Lead Levels by Dataset (Log Scale)",
+    x = "Lead concentration (ppb, log scale)",
+    y = "Density"
+  )
+```
+Getting closer to happy with this plot as you can visualize the differences between the MDEQ (red) and the MDEQ with outliers removed (green). It appears small but we are on a log scale and this is lead poisoning so the variance seems quite important. 
+
+
+
