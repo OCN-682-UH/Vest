@@ -1,0 +1,19 @@
+---
+title: "README"
+subtitle: Learning Shiny Apps 
+author: "Jordan Vest"
+date: today
+format: html
+---
+
+# Week 11 Shiny App — Palmer Penguins Explorer
+
+This app let's you explore the Palmer Penguins dataset with interactive scatter plots.
+
+[**Live app**](https://jordanvest.shinyapps.io/penguins_explorer_HW11/)
+
+Files included:
+
+- Script/penguins_app/app.R — Shiny app script
+- Data/penguins.csv — dataset used
+- HTML link to shiny app : https://jordanvest.shinyapps.io/penguins_explorer_HW11/

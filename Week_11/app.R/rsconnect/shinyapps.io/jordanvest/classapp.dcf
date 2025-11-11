@@ -1,0 +1,12 @@
+name: classapp
+title: classapp
+username: jordanvest
+account: jordanvest
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 15968715
+bundleId: 11132267
+url: https://jordanvest.shinyapps.io/classapp/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
