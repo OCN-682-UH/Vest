@@ -127,5 +127,6 @@ ggplot(flint_combined, aes(x = lead_ppb, color = dataset, fill = dataset)) +
 ```
 Getting closer to happy with this plot as you can visualize the differences between the MDEQ (red) and the MDEQ with outliers removed (green). It appears small but we are on a log scale and this is lead poisoning so the variance seems quite important. 
 
-
+# New Knowledge
+Worked with geomdensity to plot the variances between datasets. Learned that it treats the line and the fill separately so fixing the legend was a bit redundant. Added in a log scale which isn't new knowedge necessarily but did help a lot in this case with visualizing the data spread.
 

@@ -12,6 +12,8 @@ This app let's you explore the Palmer Penguins dataset with interactive scatter 
 
 [**Live app**](https://jordanvest.shinyapps.io/penguins_explorer_HW11/)
 
+https://jordanvest.shinyapps.io/penguins_explorer_HW11/
+
 Files included:
 
 - Script/penguins_app/app.R — Shiny app script
