@@ -10,12 +10,11 @@ format: html
 
 This app let's you explore the Palmer Penguins dataset with interactive scatter plots.
 
-[**Live app**](https://jordanvest.shinyapps.io/penguins_explorer_HW11/)
+[**Live app linked here**](https://jordanvest.shinyapps.io/penguins_explorer_HW11/)
 
-https://jordanvest.shinyapps.io/penguins_explorer_HW11/
 
 Files included:
 
 - Script/penguins_app/app.R — Shiny app script
 - Data/penguins.csv — dataset used
-- HTML link to shiny app : https://jordanvest.shinyapps.io/penguins_explorer_HW11/
+- [HTML link to shiny app](https://jordanvest.shinyapps.io/penguins_explorer_HW11/)
