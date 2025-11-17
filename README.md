@@ -23,41 +23,42 @@ Demonstrates my progress in learning R; This repository contains all of my scrip
 * [Output](Week_03/Output): penguin figures, in class example and histogram homework
 * [Scripts](Week_03/Scripts): ggplot scripts to make plots that are nice to look at
 
-### [Week_04](): Data Wrangling
+### [Week_04](Week_04): Data Wrangling
 * [Data]():
 * [Scripts](): 
 
-### [Week_05](): Relational data/dates and times
+### [Week_05](Week_05): Relational data/dates and times
 * [Data]():
 * [Scripts](): 
 
-### [Week_06](): Quarto
+### [Week_06](Week_06): Quarto
 * [Data]():
 * [Scripts](): 
 
-### [Week_07](): Spatial Data and Maps
+### [Week_07](Week_07): Spatial Data and Maps
 * [Data]():
 * [Scripts](): 
 
-### [Week_08](): Strings and Regex
+### [Week_08](Week_08): Strings and Regex
 * [Data]():
 * [Scripts](): 
 
-### [Week_09](): Factors
+### [Week_09](Week_09): Factors
 * [Data]():
 * [Scripts](): 
 
-### [Week_10](): Functional Programming
+### [Week_10](Week_10): Functional Programming
 * [Data]():
 * [Scripts](): 
 
-### [Week_11](): Shiny Apps
-* [Data]():
-* [Scripts](): 
+### [Week_11](Week_11): Shiny Apps
+* [Data](Week_11/Data/pengions.csv):
+* [Scripts](Week_11/Script/penguins_app): 
+* [**Live app linked here**](https://jordanvest.shinyapps.io/penguins_explorer_HW11/)
 
-### [Week_12](): TidyTuesday
-* [Data]():
-* [Scripts](): 
+### [Week_12](Tidy Tuesday): TidyTuesday
+* [Scripts](Tidy Tuesday/Week12_TidyTuesday.qmd) 
+* [Output]((Tidy Tuesday/Output/Wk12_tb_trend_plot)
 
 ### [Week_13](): Iteractive Data
 * [Data]():
