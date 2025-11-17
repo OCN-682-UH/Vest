@@ -24,41 +24,48 @@ Demonstrates my progress in learning R; This repository contains all of my scrip
 * [Scripts](Week_03/Scripts): ggplot scripts to make plots that are nice to look at
 
 ### [Week_04](Week_04): Data Wrangling
-* [Data]():
-* [Scripts](): 
+* [Data](Week_04/Data):Chemical data for Maunalua
+* [Scripts](Week_04/Scripts): dplr practice scripts
+* [Outputs](Week_04/Outputs): In class pengion boxplot and HW Scatter plot
 
 ### [Week_05](Week_05): Relational data/dates and times
-* [Data]():
-* [Scripts](): 
+* [Data](Week_05/Data): Moorea biogeochem data
+* [Scripts](Week_05/Script): Practice with lubridate script
+* [Output](Week_05/Output): Converted data and plot
 
 ### [Week_06](Week_06): Quarto
-* [Data]():
-* [Scripts](): 
+* [Data](Week_06/Data): Maunalua chemdata practice
+* [Scripts](Week_06/Script): Practice with qmd
+* [Output](Week_06/Output): Pengion scatter plots
 
 ### [Week_07](Week_07): Spatial Data and Maps
-* [Data]():
-* [Scripts](): 
+* [Data](Week_07/Data): Bigfoot dataset used for HW, rest for in-class
+* [Scripts](Week_07/Scripts): Map HW .qmd
+* [Output](Week_07/Output): Bigfoots on the map
 
 ### [Week_08](Week_08): Strings and Regex
-* [Data]():
-* [Scripts](): 
+* [Data](Week_08/Data): Cleaning GoodPlot BadPlot data
+* [Scripts](Week_08/Script): GoodPlot qmd
+* [Output](Week_08/Output): Goodplot, badplot, class practice plot
 
 ### [Week_09](Week_09): Factors
-* [Data]():
-* [Scripts](): 
+* [Data](Week_09/Data): Intertidal
+* [Scripts](Week_09/Script): HW .qmd
+*[Output](Week_09/Output) : Intertidal plot
 
 ### [Week_10](Week_10): Functional Programming
-* [Data]():
-* [Scripts](): 
+* [Data](Week_10/Data): Used same dataset for final project (Moorea)
+* [Scripts](Week_10/Script): HW .qmd writing a function
+* [Output](Week_10/Output): Isotopes by sample type
 
 ### [Week_11](Week_11): Shiny Apps
-* [Data](Week_11/Data/pengions.csv):
-* [Scripts](Week_11/Script/penguins_app): 
+* [Data](Week_11/Data/pengions.csv): Used the Palmer Penguins dataset
+* [Scripts](Week_11/Script/penguins_app): Script for the shiny app
 * [**Live app linked here**](https://jordanvest.shinyapps.io/penguins_explorer_HW11/)
 
 ### [Week_12](Tidy Tuesday): TidyTuesday
-* [Scripts](Tidy Tuesday/Week12_TidyTuesday.qmd) 
-* [Output]((Tidy Tuesday/Output/Wk12_tb_trend_plot)
+* [Scripts]()
+* [Output]()
 
 ### [Week_13](): Iteractive Data
 * [Data]():
