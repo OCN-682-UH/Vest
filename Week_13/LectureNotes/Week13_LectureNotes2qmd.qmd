@@ -237,6 +237,6 @@ lm_mod<-linear_reg() %>%
 lm_mod
 ```
 
-HW sub salinity to light and 3 to for
+HW sub salinity to light and 3 to 4
 library(pushoverr)
 > pushover("J - the R gods request your devotion")

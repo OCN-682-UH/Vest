@@ -1,0 +1,184 @@
+---
+title: "Week_13_HW"
+subtitle: "for loops and map()"
+author: "Jordan Vest"
+date: today
+format: 
+  html:
+    toc: true
+    toc-title: "Are you lost? Look here!" 
+    theme: darkly
+    smooth-scroll: true 
+    respect-user-color-scheme: true 
+    link-external-newwindow: true
+    linkcolor: pink 
+    page-layout: article
+---
+
+# for loop
+
+## Load libraries
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+library(here)
+library(palmerpenguins)
+library(broom)
+library(performance) 
+library(modelsummary)
+library(tidymodels)
+library(pandoc)
+```
+
+## Load data
+
+Read in one of the files so that we can see what it looks like.
+```{r}
+#| message: false
+#| warning: false
+testdata<-read_csv(here("Week_13", "Data", "HW_Data", "TP1.csv"))
+glimpse(testdata)
+```
+
+### list files in a directory
+```{r}
+#| message: false
+#| warning: false
+CondPath<-here("Week_13", "Data", "HW_Data")
+# list all the files in that path that has a .csv in the filename
+files <- dir(path = CondPath,pattern = ".csv")
+files
+```
+
+### pre-allocate space for the loop
+Let's calculate the mean temperature and salinity from each file and save it
+```{r}
+#| message: false
+#| warning: false
+# pre-allocate space
+# make an empty dataframe that has one row for each file and 3 columns
+ tidepools<-tibble(filename =  rep(NA, length(files)),  # column name for year
+                   mean_temp = rep(NA, length(files)), # column name for the mean temperature
+                   mean_light = rep(NA, length(files)), # column name for the mean salinity
+                   ) # column name for the year name
+tidepools
+```
+
+## for loop test
+write basic code to calculate a mean and build out
+```{r}
+#| message: false
+#| warning: false
+raw_data<-read_csv(paste0(CondPath,"/",files[1])) # test by reading in the first file and see if it works
+head(raw_data)
+```
+Make sure your path can get you there
+```{r}
+#| message: false
+#| warning: false
+mean_temp<-mean(raw_data$Temp.C, na.rm = TRUE) # calculate a mean
+mean_temp
+```
+Test test test
+```{r}
+#| message: false
+#| warning: false
+mean_light<-mean(raw_data$Intensity.lux, na.rm = TRUE) # calculate a mean
+mean_light
+```
+
+### turn it into a for loop
+```{r}
+#| message: false
+#| warning: false
+for (i in 1:length(files)){ # loop over 1:4 the number of files 
+raw_data<-read_csv(paste0(CondPath,"/",files[i]))
+glimpse(raw_data)
+}
+```
+
+```{r}
+#| message: false
+#| warning: false
+for (i in 1:length(files)){ # loop over 1:4 the number of files 
+raw_data<-read_csv(paste0(CondPath,"/",files[i]))
+#glimpse(raw_data)
+tidepools$filename[i]<-files[i]
+} 
+tidepools
+```
+
+### Add in means
+```{r}
+#| message: false
+#| warning: false
+for (i in 1:length(files)){ 
+raw_data<-read_csv(paste0(CondPath,"/",files[i]))
+#glimpse(raw_data)
+tidepools$filename[i]<-files[i]
+tidepools$mean_temp[i]<-mean(raw_data$Temp.C, na.rm =TRUE)
+tidepools$mean_light[i]<-mean(raw_data$Intensity.lux, na.rm =TRUE)
+} 
+tidepools
+```
+
+## Save output
+```{r}
+#| message: false
+#| warning: false
+write.csv(tidepools, "/Users/jordanvest/Desktop/repositories/Vest/Week_13/Output//tidepool_summary_forloop.csv",
+          row.names = FALSE)
+```
+
+
+# map()
+
+## Load data
+```{r}
+#| message: false
+#| warning: false
+CondPath<-here("Week_13", "Data", "HW_Data")
+files <- dir(path = CondPath,pattern = ".csv")
+files
+```
+
+####Map likes the full file names so let's add that
+```{r}
+#| message: false
+#| warning: false
+files <- dir(path = CondPath,pattern = ".csv", full.names = TRUE)
+#save the entire path name
+files
+```
+
+### Read in the files
+```{r}
+#| message: false
+#| warning: false
+data<-files %>%
+  set_names()%>% # set's the id of each list to the file name
+  map_df(read_csv,.id = "filename") # map everything to a dataframe and put the id in a column called filename
+data
+```
+
+### Calculate means
+```{r}
+#| message: false
+#| warning: false
+data<-files %>%
+  set_names()%>% 
+  map_df(read_csv,.id = "filename") %>% 
+  group_by(filename) %>%
+  summarise(mean_temp = mean(Temp.C, na.rm = TRUE),
+            mean_light = mean(Intensity.lux,na.rm = TRUE))
+data
+```
+
+## Save output
+```{r}
+#| message: false
+#| warning: false
+write.csv(data, "/Users/jordanvest/Desktop/repositories/Vest/Week_13/Output//tidepool_summary_map().csv",
+          row.names = FALSE)
+```

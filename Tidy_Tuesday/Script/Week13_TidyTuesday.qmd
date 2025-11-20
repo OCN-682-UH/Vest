@@ -1,0 +1,90 @@
+---
+subtitle: "Tidy Tuesday Week 13"
+author: "Jordan Vest"
+date: today
+format: 
+  html:
+    toc: true
+    toc-title: "Are you lost? Look here!" 
+    theme: darkly
+    smooth-scroll: true 
+    respect-user-color-scheme: true 
+    link-external-newwindow: true
+    linkcolor: pink 
+    page-layout: article
+---
+# New Knowledge
+We talked about word clouds in class, but I didn’t make one during the exercises. So this week I learned to actually build one from scratch and used {tidytext} to tokenize the data and {wordcloud2} to visualize the results. 
+
+## Load libraries
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+library(tidytext)     
+library(wordcloud2)
+```
+
+## Load data
+```{r}
+#| message: false
+#| warning: false
+holmes <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-11-18/holmes.csv')
+```
+
+## Clean data
+
+### Detect all lines that are in quotes 
+This is a very rough way to filter out the data we want but since Watson narrates these stories, much of the dialogue in quotes will give us the most spoken words.
+```{r}
+#| message: false
+#| warning: false
+holmes_lines <- holmes %>%
+  filter(!is.na(text)) %>%
+  filter(str_detect(text, '"'))  # keeps lines with double quotes
+```
+
+### Tokenize words
+```{r}
+#| message: false
+#| warning: false
+holmes_words <- holmes_lines %>%
+  unnest_tokens(word, text)
+```
+
+### Filter out stop words
+```{r}
+#| message: false
+#| warning: false
+holmes_words_clean <- holmes_words %>%
+  filter(!word %in% tidytext::stop_words$word) %>%
+  filter(str_detect(word, "^[a-z']+$"))
+```
+
+### Count most said words
+```{r}
+#| message: false
+#| warning: false
+holmes_word_counts <- holmes_words_clean %>%
+  count(word, sort = TRUE)
+```
+
+### Top 100 words
+```{r}
+#| message: false
+#| warning: false
+top_n <- 100
+holmes_top <- holmes_word_counts %>% slice_max(n = top_n, order_by = n)
+```
+
+# Make a word cloud
+```{r}
+#| message: false
+#| warning: false
+wc <- wordcloud2(data = holmes_top, size = 1, color = "random-dark", backgroundColor = "white")
+wc
+```
+
+
+
+
