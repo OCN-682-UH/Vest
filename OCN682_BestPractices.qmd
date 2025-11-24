@@ -1,11 +1,52 @@
 ---
 title: "OCN_682_BestPractices"
 author: "Jordan Vest"
-format: html
+date: today
+format: 
+  html:
+    toc: true
+    toc-title: "Are you lost? Look here!" 
+    theme: darkly
+    smooth-scroll: true 
+    respect-user-color-scheme: true 
+    link-external-newwindow: true
+    linkcolor: pink 
+    page-layout: article
+    code-copy: true 
+    lightbox: true 
+    code-fold: true
 ---
-[data viz](https://github.com/cxli233/FriendsDontLetFriends)
+# Starting a repo
+```{r}
+#| message: false
+#| warning: false
+Go to github and set up a new repo (add readme!)
+Then go to RStudio and add new project, version control, add link from github
+Test with a pull, commit, push
+```
+
+# README
+```{r}
+#| message: false
+#| warning: false
+Your script should be divided into 5 (ish) subsections (depending on what you are doing)
+
+#A short intro to the purpose of the code
+
+#Loading the libraries that you use in the script
+
+#A list of important functions (we won't use these until later in the semester)
+
+#Read in your data
+
+#Code for your data analysis (This will be divided further based on your own personal analysis)
+```
 
 
+# [data viz](https://github.com/cxli233/FriendsDontLetFriends)
+```{r}
+#| message: false
+#| warning: false
 ## Geometry & Mapping
 
 Use the most appropriate geometry (e.g., scatterplot for correlation, boxplot for distribution).
@@ -45,3 +86,5 @@ Always start quantitative axes at zero (especially for bar charts). Use consiste
 ## Faceting/Grouping
 
 Group elements closely for easy comparison. Use facets sparingly and ensure scale consistency across panels.
+```
+

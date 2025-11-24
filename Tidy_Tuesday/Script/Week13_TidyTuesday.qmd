@@ -1,3 +1,4 @@
+callie: is this new knowledge enough?
 ---
 subtitle: "Tidy Tuesday Week 13"
 author: "Jordan Vest"
@@ -77,6 +78,7 @@ top_n <- 100
 holmes_top <- holmes_word_counts %>% slice_max(n = top_n, order_by = n)
 ```
 
+
 # Make a word cloud
 ```{r}
 #| message: false
@@ -85,6 +87,19 @@ wc <- wordcloud2(data = holmes_top, size = 1, color = "random-dark", backgroundC
 wc
 ```
 
+This is cool but I feel I didn't learn any flashy "new" thing so I'm going to add on to it by putting the worldcloud inside a sherlock silhouette
 
+```{r}
+```{r}
+figPath <- ("/Users/jordanvest/Desktop/repositories/Vest/Tidy_Tuesday/Data/sherlock.png")
+```
 
-
+```{r}
+wc <- wordcloud2(
+  data = holmes_top, 
+  size = 1, 
+  color = "random-dark", 
+  backgroundColor = "white",
+  figPath = figPath
+)
+```

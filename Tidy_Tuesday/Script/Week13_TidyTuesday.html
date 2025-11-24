@@ -7,7 +7,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Jordan Vest">
-<meta name="dcterms.date" content="2025-11-20">
 
 <title>week13_tidytuesday</title>
 <style>
@@ -126,7 +125,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">November 20, 2025</p>
+      <p class="date">today</p>
     </div>
   </div>
   
@@ -138,9 +137,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<p>callie: is this new knowledge enough?</p>
 <section id="new-knowledge" class="level1">
 <h1>New Knowledge</h1>
-<p>We talked about word clouds in class, but I didn’t make one during the exercises. So this week I learned to actually build one from scratch and used tidytext to tokenize the data and wordcloud2 to visualize the results.</p>
+<p>We talked about word clouds in class, but I didn’t make one during the exercises. So this week I learned to actually build one from scratch and used {tidytext} to tokenize the data and {wordcloud2} to visualize the results.</p>
 <section id="load-libraries" class="level2">
 <h2 class="anchored" data-anchor-id="load-libraries">Load libraries</h2>
 <div class="cell">
@@ -194,19 +194,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>top_n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>holmes_top <span class="ot">&lt;-</span> holmes_word_counts <span class="sc">%&gt;%</span> <span class="fu">slice_max</span>(<span class="at">n =</span> top_n, <span class="at">order_by =</span> n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>figPath <span class="ot">&lt;-</span> (<span class="st">"/Users/jordanvest/Desktop/repositories/Vest/Tidy_Tuesday/Data/sherlock.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 </section>
 </section>
 <section id="make-a-word-cloud" class="level1">
 <h1>Make a word cloud</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>wc <span class="ot">&lt;-</span> <span class="fu">wordcloud2</span>(<span class="at">data =</span> holmes_top, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"random-dark"</span>, <span class="at">backgroundColor =</span> <span class="st">"white"</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>wc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>wc <span class="ot">&lt;-</span> <span class="fu">wordcloud2</span>(<span class="at">data =</span> holmes_top, <span class="at">size =</span> <span class="dv">1</span>, <span class="at">color =</span> <span class="st">"random-dark"</span>, <span class="at">backgroundColor =</span> <span class="st">"white"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>wc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div class="wordcloud2 html-widget html-fill-item" id="htmlwidget-aff58d6bd26ab97253ac" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-aff58d6bd26ab97253ac">{"x":{"word":["holmes","sir","watson","cried","answered","time","dear","matter","night","house","heard","sherlock","friend","remarked","morning","ah","day","door","hand","doubt","found","hear","left","lestrade","dr","mcmurdo","hands","suppose","fellow","lady","mind","inspector","london","miss","word","business","voice","leave","told","surely","understand","police","half","head","read","street","brother","eyes","paper","letter","life","window","hope","hour","woman","remember","papers","round","answer","evening","wife","death","fear","god","question","moment","call","doctor","henry","father","light","companion","excellent","pray","looked","true","murder","days","glad","note","colonel","words","brought","chair","coming","lord","moor","continued","gentleman","poor","reason","bad","dead","white","crime","late","mcginty","morrow","trust","wait"],"freq":[1329,599,506,436,239,238,207,190,188,170,168,153,149,145,137,136,134,132,129,123,120,113,110,108,107,106,105,99,97,97,97,95,95,95,94,93,92,91,90,89,87,86,85,84,80,78,77,76,76,74,73,73,72,72,70,69,68,68,67,66,66,65,65,65,65,64,63,63,63,60,60,59,59,59,57,57,56,55,55,55,54,54,53,53,52,52,52,51,51,51,51,50,50,50,49,49,49,49,49,49],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.1354401805869075,"backgroundColor":"white","gridSize":0,"minRotation":-0.7853981633974483,"maxRotation":0.7853981633974483,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
+<div class="wordcloud2 html-widget html-fill-item" id="htmlwidget-5a7a17c44f7b988ffa2d" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-5a7a17c44f7b988ffa2d">{"x":{"word":["holmes","sir","watson","cried","answered","time","dear","matter","night","house","heard","sherlock","friend","remarked","morning","ah","day","door","hand","doubt","found","hear","left","lestrade","dr","mcmurdo","hands","suppose","fellow","lady","mind","inspector","london","miss","word","business","voice","leave","told","surely","understand","police","half","head","read","street","brother","eyes","paper","letter","life","window","hope","hour","woman","remember","papers","round","answer","evening","wife","death","fear","god","question","moment","call","doctor","henry","father","light","companion","excellent","pray","looked","true","murder","days","glad","note","colonel","words","brought","chair","coming","lord","moor","continued","gentleman","poor","reason","bad","dead","white","crime","late","mcginty","morrow","trust","wait"],"freq":[1329,599,506,436,239,238,207,190,188,170,168,153,149,145,137,136,134,132,129,123,120,113,110,108,107,106,105,99,97,97,97,95,95,95,94,93,92,91,90,89,87,86,85,84,80,78,77,76,76,74,73,73,72,72,70,69,68,68,67,66,66,65,65,65,65,64,63,63,63,60,60,59,59,59,57,57,56,55,55,55,54,54,53,53,52,52,52,51,51,51,51,50,50,50,49,49,49,49,49,49],"fontFamily":"Segoe UI","fontWeight":"bold","color":"random-dark","minSize":0,"weightFactor":0.1354401805869075,"backgroundColor":"white","gridSize":0,"minRotation":-0.7853981633974483,"maxRotation":0.7853981633974483,"shuffle":true,"rotateRatio":0.4,"shape":"circle","ellipticity":0.65,"figBase64":null,"hover":null},"evals":[],"jsHooks":{"render":[{"code":"function(el,x){\n                        console.log(123);\n                        if(!iii){\n                          window.location.reload();\n                          iii = False;\n\n                        }\n  }","data":null}]}}</script>
 </div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>wc <span class="ot">&lt;-</span> <span class="fu">wordcloud2</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> holmes_top, </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">size =</span> <span class="dv">1</span>, </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">color =</span> <span class="st">"random-dark"</span>, </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">backgroundColor =</span> <span class="st">"white"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">figPath =</span> figPath</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>This is cool but I feel I didn’t learn any flashy “new” thing so I’m going to add on to it a bit.</p>
 </section>
 
 </main>
