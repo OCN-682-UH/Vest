@@ -1,4 +1,3 @@
-callie: is this new knowledge enough?
 ---
 subtitle: "Tidy Tuesday Week 13"
 author: "Jordan Vest"
@@ -15,7 +14,7 @@ format:
     page-layout: article
 ---
 # New Knowledge
-We talked about word clouds in class, but I didn’t make one during the exercises. So this week I learned to actually build one from scratch and used {tidytext} to tokenize the data and {wordcloud2} to visualize the results. 
+We talked about word clouds in class, but I don't remember making one during the exercises. So this week I practiced working with text by learning to actually build one from scratch. I used {tidytext} to tokenize the data and {wordcloud2} to visualize the results. I learned how to filter out the data by quotes, tokenize each word, remove stop words, and figure out the most said words in the series before making a word cloud.
 
 ## Load libraries
 ```{r}
@@ -78,28 +77,10 @@ top_n <- 100
 holmes_top <- holmes_word_counts %>% slice_max(n = top_n, order_by = n)
 ```
 
-
 # Make a word cloud
 ```{r}
 #| message: false
 #| warning: false
 wc <- wordcloud2(data = holmes_top, size = 1, color = "random-dark", backgroundColor = "white")
 wc
-```
-
-This is cool but I feel I didn't learn any flashy "new" thing so I'm going to add on to it by putting the worldcloud inside a sherlock silhouette
-
-```{r}
-```{r}
-figPath <- ("/Users/jordanvest/Desktop/repositories/Vest/Tidy_Tuesday/Data/sherlock.png")
-```
-
-```{r}
-wc <- wordcloud2(
-  data = holmes_top, 
-  size = 1, 
-  color = "random-dark", 
-  backgroundColor = "white",
-  figPath = figPath
-)
 ```
