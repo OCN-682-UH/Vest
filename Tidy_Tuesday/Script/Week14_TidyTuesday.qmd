@@ -1,0 +1,89 @@
+---
+title: "Week14_TidyTuesday"
+author: "Jordan Vest"
+format: html
+execute: 
+  warning: false
+  message: false
+  echo: true
+---
+# New learnings
+Well I tried to be really quick about this one so I could work on my Final Project (oopsie on time management). I wanted to practice using patchwork and chose two columns that I thought might influence the overall SPI score from the data glimpse. I made the income boxplot pretty easily and then realized I would need a categorical sorting to do the same for population. So I learned another new thing by sorting these into *quantile bins*! I also had to go back and reorder the names for income brackets and remove the 'Not classified' category. 
+
+## Load libraries
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+library(here)
+library(patchwork)
+```
+
+## Load Data
+```{r}
+spi_indicators <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-11-25/spi_indicators.csv')
+```
+
+## Data cleaning
+```{r}
+# Subset to latest year for simplicity
+# Create population bins (categorical) using quantiles
+spi_2023 <- spi_indicators %>%
+  filter(year == 2023, income != "Not classified") %>%  # remove Not classified
+  mutate(
+    income = factor(income, levels = c("High income", "Upper middle income",
+                                       "Lower middle income", "Low income")),
+    pop_bin = cut(
+      population,
+      breaks = quantile(population, probs = seq(0, 1, 0.25), na.rm = TRUE),
+      include.lowest = TRUE,
+      labels = c("Q1", "Q2", "Q3", "Q4")
+    )
+  )
+glimpse(spi_2023)
+```
+
+## Income Boxplot
+```{r}
+p_income <- ggplot(spi_2023, aes(income, overall_score)) +
+  geom_boxplot(fill = "steelblue", alpha = 0.7) +
+  labs(
+    subtitle = "By Income Level",
+    x = "Income Group",
+    y = "Overall SPI Score"
+  ) +
+  theme_minimal() +
+  coord_flip()
+p_income
+```
+
+## Population boxplot
+```{r}
+p_pop <- ggplot(spi_2023, aes(pop_bin, overall_score)) +
+  geom_boxplot(fill = "darkgreen", alpha = 0.7) +
+  labs(
+    subtitle = "By Population Quartile",
+    x = "Population Quartile",
+    y = "Overall SPI"
+  ) +
+  theme_minimal() +
+  coord_flip()
+p_pop
+```
+
+## Patch them together
+```{r}
+combined <- p_income + p_pop + 
+  plot_layout(ncol = 2) + 
+  plot_annotation(
+    title = "Statistical Performance (SPI) by Income and Population"
+  )
+combined
+```
+
+## Save
+```{r}
+#ggsave("/Users/jordanvest/Desktop/repositories/Vest/Tidy_Tuesday/Output/spi_trends.png", combined, width = 8, height = 6)
+```
+```
+
